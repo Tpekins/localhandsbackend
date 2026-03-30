@@ -52,7 +52,6 @@ export class Review1Service {
       include: {
         contract: true,
         reviewer: true,
-
       },
     });
     if (!review) {

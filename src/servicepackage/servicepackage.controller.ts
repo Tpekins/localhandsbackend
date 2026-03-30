@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ServicepackageService } from './servicepackage.service';
 import { CreateServicepackageDto } from './dto/create-servicepackage.dto';
 import { UpdateServicepackageDto } from './dto/update-servicepackage.dto';
@@ -12,7 +22,10 @@ export class ServicepackageController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new service package' })
-  @ApiResponse({ status: 201, description: 'The service package has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The service package has been successfully created.',
+  })
   @ApiResponse({ status: 404, description: 'Provider not found.' })
   create(@Body() createServicepackageDto: CreateServicepackageDto) {
     return this.servicepackageService.create(createServicepackageDto);
@@ -29,7 +42,10 @@ export class ServicepackageController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific service package by ID' })
-  @ApiResponse({ status: 200, description: 'The service package has been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The service package has been successfully retrieved.',
+  })
   @ApiResponse({ status: 404, description: 'Service package not found.' })
   findOne(@Param('id') id: string) {
     return this.servicepackageService.findOne(+id);
@@ -38,16 +54,25 @@ export class ServicepackageController {
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update a specific service package by ID' })
-  @ApiResponse({ status: 200, description: 'The service package has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The service package has been successfully updated.',
+  })
   @ApiResponse({ status: 404, description: 'Service package not found.' })
-  update(@Param('id') id: string, @Body() updateServicepackageDto: UpdateServicepackageDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateServicepackageDto: UpdateServicepackageDto,
+  ) {
     return this.servicepackageService.update(+id, updateServicepackageDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a specific service package by ID' })
-  @ApiResponse({ status: 204, description: 'The service package has been successfully deleted.' })
+  @ApiResponse({
+    status: 204,
+    description: 'The service package has been successfully deleted.',
+  })
   @ApiResponse({ status: 404, description: 'Service package not found.' })
   remove(@Param('id') id: string) {
     return this.servicepackageService.remove(+id);

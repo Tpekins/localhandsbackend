@@ -9,7 +9,14 @@ export class Profile1Service {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createProfile1Dto: CreateProfile1Dto) {
-    const { userId, bio, mobileMoneyNumber, bankAccountNumber, nationalIdUrl, location } = createProfile1Dto;
+    const {
+      userId,
+      bio,
+      mobileMoneyNumber,
+      bankAccountNumber,
+      nationalIdUrl,
+      location,
+    } = createProfile1Dto;
 
     // Ensure the user exists
     const user = await this.prisma.user.findUnique({

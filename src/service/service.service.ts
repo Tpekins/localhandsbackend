@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
@@ -9,7 +13,8 @@ export class ServiceService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createServiceDto: CreateServiceDto) {
-    const { title, description, categoryId, price, status, providerId } = createServiceDto;
+    const { title, description, categoryId, price, status, providerId } =
+      createServiceDto;
 
     // Ensure the provider exists
     const provider = await this.prisma.user.findUnique({
@@ -42,7 +47,11 @@ export class ServiceService {
     });
   }
 
-  async findAll(filters?: { status?: string; categoryId?: string; providerId?: string }) {
+  async findAll(filters?: {
+    status?: string;
+    categoryId?: string;
+    providerId?: string;
+  }) {
     const where: Prisma.ServiceWhereInput = {};
 
     if (filters?.status) {
@@ -144,7 +153,9 @@ export class ServiceService {
 
   async updateStatus(id: number, status: string) {
     if (!['available', 'unavailable', 'archived'].includes(status)) {
-      throw new BadRequestException('Invalid status. Allowed values: available, unavailable, archived.');
+      throw new BadRequestException(
+        'Invalid status. Allowed values: available, unavailable, archived.',
+      );
     }
 
     // Check if the service exists
@@ -164,6 +175,23 @@ export class ServiceService {
       where: { id },
       data: {
         views: { increment: 1 },
+      },
+    });
+  }
+
+  async findFeatured(limit: number = 6) {
+    return this.prisma.service.findMany({
+      where: {
+        status: 'available',
+      },
+      take: limit,
+      include: {
+        category: true,
+        provider: true,
+        assets: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }

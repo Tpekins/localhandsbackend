@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,8 +17,11 @@ export class AuthService {
     return this.usersService.create(user);
   }
 
-  async validateUser(identifier: string, password: string): Promise<Omit<User, 'passwordHash'> | null> {
-    let user;
+  async validateUser(
+    identifier: string,
+    password: string,
+  ): Promise<Omit<User, 'passwordHash'> | null> {
+    let user: User;
     // Try to find user by email or phone number
     try {
       if (identifier.includes('@')) {
@@ -25,30 +29,27 @@ export class AuthService {
       } else {
         user = await this.usersService.findByPhoneNumber(identifier);
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       return null;
     }
 
     if (user && (await bcrypt.compare(password, user.passwordHash))) {
-      const { passwordHash, ...result } = user;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordHash: _, ...result } = user;
       return result;
     }
     return null;
   }
 
-  async login(credentials: {
-    email?: string;
-    phoneNumber?: string;
-    password: string;
-  }): Promise<{ access_token: string }> {
-    const identifier = credentials.email || credentials.phoneNumber;
-    if (!identifier) {
-      throw new Error('Either email or phone number must be provided');
-    }
+  async login(
+    loginDto: LoginDto,
+  ): Promise<{ access_token: string; user: Omit<User, 'passwordHash'> }> {
+    const { identifier, password } = loginDto;
 
-    const validatedUser = await this.validateUser(identifier, credentials.password);
+    const validatedUser = await this.validateUser(identifier, password);
     if (!validatedUser) {
-      throw new Error('Invalid credentials');
+      throw new ForbiddenException('Invalid credentials');
     }
 
     const payload = {
@@ -59,6 +60,7 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+      user: validatedUser,
     };
   }
 }

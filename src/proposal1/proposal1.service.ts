@@ -8,7 +8,8 @@ export class Proposal1Service {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createProposal1Dto: CreateProposal1Dto) {
-    const { providerId, serviceId, coverLetter, bidAmount } = createProposal1Dto;
+    const { providerId, serviceId, coverLetter, bidAmount } =
+      createProposal1Dto;
 
     // Ensure the provider exists
     const provider = await this.prisma.user.findUnique({

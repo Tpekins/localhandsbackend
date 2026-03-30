@@ -101,7 +101,9 @@ export class ServiceorderService {
       },
     });
     if (!serviceOrder) {
-      throw new NotFoundException(`Service order with ID ${serviceOrderId} not found`);
+      throw new NotFoundException(
+        `Service order with ID ${serviceOrderId} not found`,
+      );
     }
     return serviceOrder.contract;
   }

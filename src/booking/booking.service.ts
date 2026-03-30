@@ -8,7 +8,8 @@ export class BookingService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createBookingDto: CreateBookingDto) {
-    const { serviceId, clientId, startTime, endTime, location } = createBookingDto;
+    const { serviceId, clientId, startTime, endTime, location } =
+      createBookingDto;
 
     // Ensure the service exists
     const service = await this.prisma.service.findUnique({

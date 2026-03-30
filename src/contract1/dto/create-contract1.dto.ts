@@ -6,7 +6,9 @@ export class CreateContract1Dto {
   @IsInt({ message: 'Service Order ID must be an integer and is required.' })
   serviceOrderId: number;
 
-  @IsPositive({ message: 'Escrow amount must be a positive number and is required.' })
+  @IsPositive({
+    message: 'Escrow amount must be a positive number and is required.',
+  })
   escrowAmount: number;
 
   @IsOptional()

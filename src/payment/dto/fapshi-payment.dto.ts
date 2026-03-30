@@ -1,4 +1,16 @@
-import { IsString, IsNumber, IsOptional, IsEmail, IsBoolean, Min, IsEnum, IsNotEmpty, Length, Matches, IsDateString, IsISO8601 } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsEmail,
+  IsBoolean,
+  Min,
+  IsEnum,
+  IsNotEmpty,
+  Length,
+  Matches,
+  IsISO8601,
+} from 'class-validator';
 
 // Payment link generation DTO
 export class GeneratePaymentLinkDto {
@@ -17,13 +29,21 @@ export class GeneratePaymentLinkDto {
   @IsOptional()
   @IsString()
   @Length(1, 100, { message: 'User ID must be between 1 and 100 characters' })
-  @Matches(/^[a-zA-Z0-9\-_]+$/, { message: 'User ID can only contain alphanumeric characters, hyphens, and underscores' })
+  @Matches(/^[a-zA-Z0-9\-_]+$/, {
+    message:
+      'User ID can only contain alphanumeric characters, hyphens, and underscores',
+  })
   userId?: string;
 
   @IsOptional()
   @IsString()
-  @Length(1, 100, { message: 'External ID must be between 1 and 100 characters' })
-  @Matches(/^[a-zA-Z0-9\-_]+$/, { message: 'External ID can only contain alphanumeric characters, hyphens, and underscores' })
+  @Length(1, 100, {
+    message: 'External ID must be between 1 and 100 characters',
+  })
+  @Matches(/^[a-zA-Z0-9\-_]+$/, {
+    message:
+      'External ID can only contain alphanumeric characters, hyphens, and underscores',
+  })
   externalId?: number;
 
   @IsOptional()
@@ -50,7 +70,7 @@ export enum FapshiPaymentStatus {
   PENDING = 'PENDING',
   SUCCESSFUL = 'SUCCESSFUL',
   FAILED = 'FAILED',
-  EXPIRED = 'EXPIRED'
+  EXPIRED = 'EXPIRED',
 }
 
 // Payment status response DTO
@@ -99,7 +119,6 @@ export class ExpirePaymentDto {
 // Direct payment DTO
 export enum PaymentMedium {
   MOBILE_MONEY = 'mobile money',
-  ORANGE_MONEY = 'orange money'
 }
 
 export class DirectPaymentDto {
@@ -109,11 +128,17 @@ export class DirectPaymentDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Phone number is required' })
-  @Matches(/^6[9875]{1}[0-9]{7}$/, { message: 'Invalid phone number format. Must be in the format 69xxxxxxx' })
+  @Matches(/^6[9875]{1}[0-9]{7}$/, {
+    message: 'Invalid phone number format. Must be in the format 69xxxxxxx',
+  })
   phone: string;
 
   @IsOptional()
-  @IsEnum(PaymentMedium, { message: 'Payment medium must be one of ' + Object.values(PaymentMedium).join(', ') })
+  @IsEnum(PaymentMedium, {
+    message:
+      'Payment medium must be one of ' +
+      Object.values(PaymentMedium).join(', '),
+  })
   medium?: PaymentMedium;
 
   @IsOptional()
@@ -127,13 +152,21 @@ export class DirectPaymentDto {
   @IsOptional()
   @IsString()
   @Length(1, 100, { message: 'User ID must be between 1 and 100 characters' })
-  @Matches(/^[a-zA-Z0-9\-_]+$/, { message: 'User ID can only contain alphanumeric characters, hyphens, and underscores' })
+  @Matches(/^[a-zA-Z0-9\-_]+$/, {
+    message:
+      'User ID can only contain alphanumeric characters, hyphens, and underscores',
+  })
   userId?: string;
 
   @IsOptional()
   @IsString()
-  @Length(1, 100, { message: 'External ID must be between 1 and 100 characters' })
-  @Matches(/^[a-zA-Z0-9\-_]+$/, { message: 'External ID can only contain alphanumeric characters, hyphens, and underscores' })
+  @Length(1, 100, {
+    message: 'External ID must be between 1 and 100 characters',
+  })
+  @Matches(/^[a-zA-Z0-9\-_]+$/, {
+    message:
+      'External ID can only contain alphanumeric characters, hyphens, and underscores',
+  })
   externalId?: number;
 
   @IsOptional()
@@ -150,11 +183,19 @@ export class DirectPaymentResponseDto {
 // Search transactions query parameters DTO
 export class SearchTransactionsDto {
   @IsOptional()
-  @IsEnum(FapshiPaymentStatus, { message: 'Payment status must be one of ' + Object.values(FapshiPaymentStatus).join(', ') })
+  @IsEnum(FapshiPaymentStatus, {
+    message:
+      'Payment status must be one of ' +
+      Object.values(FapshiPaymentStatus).join(', '),
+  })
   status?: FapshiPaymentStatus;
 
   @IsOptional()
-  @IsEnum(PaymentMedium, { message: 'Payment medium must be one of ' + Object.values(PaymentMedium).join(', ') })
+  @IsEnum(PaymentMedium, {
+    message:
+      'Payment medium must be one of ' +
+      Object.values(PaymentMedium).join(', '),
+  })
   medium?: PaymentMedium;
 
   @IsOptional()
@@ -163,12 +204,18 @@ export class SearchTransactionsDto {
 
   @IsOptional()
   @IsString()
-  @IsISO8601({ strict: true }, { message: 'Start date must be in ISO 8601 format yyyy-mm-dd' })
+  @IsISO8601(
+    { strict: true },
+    { message: 'Start date must be in ISO 8601 format yyyy-mm-dd' },
+  )
   start?: string; // Format: yyyy-mm-dd
 
   @IsOptional()
   @IsString()
-  @IsISO8601({ strict: true }, { message: 'End date must be in ISO 8601 format yyyy-mm-dd' })
+  @IsISO8601(
+    { strict: true },
+    { message: 'End date must be in ISO 8601 format yyyy-mm-dd' },
+  )
   end?: string; // Format: yyyy-mm-dd
 
   @IsOptional()
@@ -181,7 +228,9 @@ export class SearchTransactionsDto {
   limit?: number;
 
   @IsOptional()
-  @IsEnum(['asc', 'desc'], { message: 'Sort must be one of ' + Object.values(['asc', 'desc']).join(', ') })
+  @IsEnum(['asc', 'desc'], {
+    message: 'Sort must be one of ' + Object.values(['asc', 'desc']).join(', '),
+  })
   sort?: 'asc' | 'desc';
 }
 

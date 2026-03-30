@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceassetDto } from './dto/create-serviceasset.dto';
 import { UpdateServiceassetDto } from './dto/update-serviceasset.dto';
@@ -8,7 +12,8 @@ export class ServiceassetService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createServiceassetDto: CreateServiceassetDto) {
-    const { serviceId, type, imageUrl, caption, areaName } = createServiceassetDto;
+    const { serviceId, type, imageUrl, caption, areaName } =
+      createServiceassetDto;
 
     // Ensure the service exists
     const service = await this.prisma.service.findUnique({
@@ -28,7 +33,9 @@ export class ServiceassetService {
         throw new BadRequestException('Area name is required for AREA assets');
       }
     } else {
-      throw new BadRequestException('Invalid asset type. Allowed values: IMAGE, AREA');
+      throw new BadRequestException(
+        'Invalid asset type. Allowed values: IMAGE, AREA',
+      );
     }
 
     // Create the service asset
@@ -85,7 +92,9 @@ export class ServiceassetService {
         throw new BadRequestException('Area name is required for AREA assets');
       }
     } else if (type) {
-      throw new BadRequestException('Invalid asset type. Allowed values: IMAGE, AREA');
+      throw new BadRequestException(
+        'Invalid asset type. Allowed values: IMAGE, AREA',
+      );
     }
 
     // Update the service asset
