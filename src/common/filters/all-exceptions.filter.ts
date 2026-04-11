@@ -1,4 +1,11 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
@@ -17,11 +24,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const errorResponse = exception.getResponse();
-      message = typeof errorResponse === 'object' && 'message' in errorResponse
-        ? Array.isArray(errorResponse['message'])
-          ? errorResponse['message'][0]
-          : errorResponse['message']
-        : exception.message;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      message =
+        typeof errorResponse === 'object' && 'message' in errorResponse
+          ? Array.isArray(errorResponse['message'])
+            ? errorResponse['message'][0]
+            : errorResponse['message']
+          : exception.message;
     } else if (exception instanceof PrismaClientKnownRequestError) {
       // Handle Prisma specific errors
       switch (exception.code) {

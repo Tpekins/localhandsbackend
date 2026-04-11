@@ -1,4 +1,11 @@
-import { IsString, IsOptional, IsNumber, IsPositive, IsIn, Length } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsPositive,
+  IsIn,
+  Length,
+} from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -14,13 +21,16 @@ export class CreateServiceDto {
   title: string;
 
   @ApiProperty({
-    example: 'Professional house cleaning service including dusting, vacuuming, and bathroom cleaning',
+    example:
+      'Professional house cleaning service including dusting, vacuuming, and bathroom cleaning',
     description: 'Detailed description of the service',
     minLength: 10,
     maxLength: 1000,
   })
   @IsString({ message: 'Description must be a string and is required.' })
-  @Length(10, 1000, { message: 'Description must be between 10 and 1000 characters.' })
+  @Length(10, 1000, {
+    message: 'Description must be between 10 and 1000 characters.',
+  })
   description: string;
 
   @ApiProperty({

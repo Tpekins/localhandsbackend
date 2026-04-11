@@ -90,7 +90,9 @@ export class ServicepackageService {
       },
     });
     if (!servicePackage) {
-      throw new NotFoundException(`Service package with ID ${packageId} not found`);
+      throw new NotFoundException(
+        `Service package with ID ${packageId} not found`,
+      );
     }
     return servicePackage.services;
   }

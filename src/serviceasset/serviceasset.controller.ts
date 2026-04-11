@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ServiceassetService } from './serviceasset.service';
 import { CreateServiceassetDto } from './dto/create-serviceasset.dto';
 import { UpdateServiceassetDto } from './dto/update-serviceasset.dto';
@@ -12,7 +22,10 @@ export class ServiceassetController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new service asset' })
-  @ApiResponse({ status: 201, description: 'The service asset has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The service asset has been successfully created.',
+  })
   @ApiResponse({ status: 404, description: 'Service not found.' })
   create(@Body() createServiceassetDto: CreateServiceassetDto) {
     return this.serviceassetService.create(createServiceassetDto);
@@ -29,7 +42,10 @@ export class ServiceassetController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific service asset by ID' })
-  @ApiResponse({ status: 200, description: 'The service asset has been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The service asset has been successfully retrieved.',
+  })
   @ApiResponse({ status: 404, description: 'Service asset not found.' })
   findOne(@Param('id') id: string) {
     return this.serviceassetService.findOne(+id);
@@ -38,16 +54,25 @@ export class ServiceassetController {
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update a specific service asset by ID' })
-  @ApiResponse({ status: 200, description: 'The service asset has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The service asset has been successfully updated.',
+  })
   @ApiResponse({ status: 404, description: 'Service asset not found.' })
-  update(@Param('id') id: string, @Body() updateServiceassetDto: UpdateServiceassetDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateServiceassetDto: UpdateServiceassetDto,
+  ) {
     return this.serviceassetService.update(+id, updateServiceassetDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a specific service asset by ID' })
-  @ApiResponse({ status: 204, description: 'The service asset has been successfully deleted.' })
+  @ApiResponse({
+    status: 204,
+    description: 'The service asset has been successfully deleted.',
+  })
   @ApiResponse({ status: 404, description: 'Service asset not found.' })
   remove(@Param('id') id: string) {
     return this.serviceassetService.remove(+id);

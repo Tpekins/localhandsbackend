@@ -15,7 +15,9 @@ export class Contract1Service {
       where: { id: serviceOrderId },
     });
     if (!serviceOrder) {
-      throw new NotFoundException(`Service order with ID ${serviceOrderId} not found`);
+      throw new NotFoundException(
+        `Service order with ID ${serviceOrderId} not found`,
+      );
     }
 
     // Create the contract

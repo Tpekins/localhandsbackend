@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { PaymentService } from './payment.service';
-import { PaymentController } from './payment.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { HttpModule } from '@nestjs/axios';
+
+import { PaymentController } from './payment.controller';
+import { PaymentService } from './payment.service';
 import { FapshiService } from './services/fapshi.service';
 
 @Module({

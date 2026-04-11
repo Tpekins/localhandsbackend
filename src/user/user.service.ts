@@ -1,6 +1,9 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
 
@@ -9,7 +12,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-    const { phoneNumber, email, password, role } = createUserDto;
+    const { name, phoneNumber, email, role } = createUserDto;
 
     // Check if a user with the same phone number or email already exists
     const existingUser = await this.prisma.user.findFirst({
@@ -18,7 +21,9 @@ export class UserService {
       },
     });
     if (existingUser) {
-      throw new ConflictException('A user with this phone number or email already exists.');
+      throw new ConflictException(
+        'A user with this phone number or email already exists.',
+      );
     }
 
     const passwordHash = await bcrypt.hash(createUserDto.password, 10);
@@ -26,6 +31,7 @@ export class UserService {
     // Create the user
     const user = await this.prisma.user.create({
       data: {
+        name,
         phoneNumber,
         email,
         passwordHash,
@@ -87,7 +93,9 @@ export class UserService {
       where: { phoneNumber },
     });
     if (!user) {
-      throw new NotFoundException(`User with phone number ${phoneNumber} not found`);
+      throw new NotFoundException(
+        `User with phone number ${phoneNumber} not found`,
+      );
     }
     return user;
   }
@@ -102,10 +110,7 @@ export class UserService {
 
     return this.prisma.user.update({
       where: { id },
-      data: {
-        ...updateUserDto,
-        role: updateUserDto.role ? (updateUserDto.role as UserRole) : undefined,
-      },
+      data: updateUserDto,
     });
   }
 

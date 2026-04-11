@@ -5,7 +5,8 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class PrismaService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy {
+  implements OnModuleInit, OnModuleDestroy
+{
   constructor(private readonly config: ConfigService) {
     super({
       log: config.get('LOG_LEVELS') || ['query', 'error', 'warn'],

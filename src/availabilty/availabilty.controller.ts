@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AvailabiltyService } from './availabilty.service';
 import { CreateAvailabiltyDto } from './dto/create-availabilty.dto';
 import { UpdateAvailabiltyDto } from './dto/update-availabilty.dto';
@@ -12,7 +22,10 @@ export class AvailabiltyController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new availability' })
-  @ApiResponse({ status: 201, description: 'The availability has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The availability has been successfully created.',
+  })
   @ApiResponse({ status: 404, description: 'Provider not found.' })
   create(@Body() createAvailabiltyDto: CreateAvailabiltyDto) {
     return this.availabiltyService.create(createAvailabiltyDto);
@@ -29,7 +42,10 @@ export class AvailabiltyController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific availability by ID' })
-  @ApiResponse({ status: 200, description: 'The availability has been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The availability has been successfully retrieved.',
+  })
   @ApiResponse({ status: 404, description: 'Availability not found.' })
   findOne(@Param('id') id: string) {
     return this.availabiltyService.findOne(+id);
@@ -38,16 +54,25 @@ export class AvailabiltyController {
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update a specific availability by ID' })
-  @ApiResponse({ status: 200, description: 'The availability has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The availability has been successfully updated.',
+  })
   @ApiResponse({ status: 404, description: 'Availability not found.' })
-  update(@Param('id') id: string, @Body() updateAvailabiltyDto: UpdateAvailabiltyDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAvailabiltyDto: UpdateAvailabiltyDto,
+  ) {
     return this.availabiltyService.update(+id, updateAvailabiltyDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a specific availability by ID' })
-  @ApiResponse({ status: 204, description: 'The availability has been successfully deleted.' })
+  @ApiResponse({
+    status: 204,
+    description: 'The availability has been successfully deleted.',
+  })
   @ApiResponse({ status: 404, description: 'Availability not found.' })
   remove(@Param('id') id: string) {
     return this.availabiltyService.remove(+id);

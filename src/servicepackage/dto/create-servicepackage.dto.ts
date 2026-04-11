@@ -1,4 +1,10 @@
-import { IsInt, IsString, IsOptional, IsPositive, Length } from 'class-validator';
+import {
+  IsInt,
+  IsString,
+  IsOptional,
+  IsPositive,
+  Length,
+} from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateServicepackageDto {
@@ -18,4 +24,6 @@ export class CreateServicepackageDto {
   price: number;
 }
 
-export class UpdateServicepackageDto extends PartialType(CreateServicepackageDto) {}
+export class UpdateServicepackageDto extends PartialType(
+  CreateServicepackageDto,
+) {}

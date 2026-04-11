@@ -40,9 +40,6 @@ enum PaymentStatus {
 
 enum PaymentMethod {
   MTN_MOBILE_MONEY
-  ORANGE_MONEY
-  BANK_TRANSFER
-  OTHER
 }
 
 enum BookingStatus {
@@ -63,6 +60,7 @@ enum AssetType {
 }
 
 model User {
+  name             String // Full name of the user
   id               Int              @id @default(autoincrement())
   role             UserRole         @default(CLIENT)
   phoneNumber      String           @unique
@@ -107,6 +105,7 @@ model Service {
   categoryId      Int?
   price           Float
   status          String           @default("available") // available, unavailable, archived
+  featured        Boolean          @default(false)  // Add featured field
   provider        User             @relation(fields: [providerId], references: [id])
   providerId      Int
   serviceOrders   ServiceOrder[]
@@ -117,7 +116,7 @@ model Service {
   assets          ServiceAsset[]   // Unified relation for both images and areas
   providerModel   Provider?        @relation(fields: [providerModelId], references: [id])
   providerModelId Int?
-  views           Int              @default(0)  // Add this line
+  views           Int              @default(0)
 }
 
 model ServiceOrder {
@@ -267,4 +266,20 @@ model ServiceAsset {
   // Field specific to AREA assets:
   areaName   String?  // Only populated if type is AREA
   createdAt  DateTime @default(now())
+}
+
+model SystemSettings {
+  id                  Int      @id @default(autoincrement())
+  maintenance_mode    Boolean  @default(false)
+  allow_registration  Boolean  @default(true)
+  review_auto_approve Boolean  @default(false)
+  payment_gateway     String   @default("fapshi")
+  email_notifications Boolean  @default(true)
+  max_file_size      Int      @default(5)
+  currency           String   @default("XAF")
+  currency_symbol    String   @default("FCFA")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  supportEmail       String?
 }

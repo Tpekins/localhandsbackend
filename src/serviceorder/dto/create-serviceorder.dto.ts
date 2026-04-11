@@ -1,4 +1,10 @@
-import { IsInt, IsString, IsOptional, IsPositive, Length } from 'class-validator';
+import {
+  IsInt,
+  IsString,
+  IsOptional,
+  IsPositive,
+  Length,
+} from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateServiceorderDto {
@@ -9,7 +15,9 @@ export class CreateServiceorderDto {
   clientId: number;
 
   @IsString({ message: 'Description must be a string and is required.' })
-  @Length(10, 500, { message: 'Description must be between 10 and 500 characters.' })
+  @Length(10, 500, {
+    message: 'Description must be between 10 and 500 characters.',
+  })
   description: string;
 
   @IsOptional()

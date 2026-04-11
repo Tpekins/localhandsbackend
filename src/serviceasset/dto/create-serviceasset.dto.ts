@@ -7,7 +7,9 @@ export class CreateServiceassetDto {
   serviceId: number;
 
   @IsString({ message: 'Type must be a string and is required.' })
-  @IsIn(['IMAGE', 'AREA'], { message: 'Type must be either "IMAGE" or "AREA".' })
+  @IsIn(['IMAGE', 'AREA'], {
+    message: 'Type must be either "IMAGE" or "AREA".',
+  })
   type: AssetType;
 
   @IsOptional()
