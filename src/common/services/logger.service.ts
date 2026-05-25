@@ -66,7 +66,7 @@ export class LoggerService implements OnModuleInit {
     if (!this.loggers.has(category)) {
       this.loggers.set(category, new Logger(category));
     }
-    return this.loggers.get(category);
+    return this.loggers.get(category)!;
   }
 
   /**
