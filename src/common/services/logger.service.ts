@@ -7,7 +7,7 @@ import * as path from 'path';
  */
 @Injectable()
 export class LoggerService implements OnModuleInit {
-  private readonly logDir = 'src/logs';
+  private readonly logDir = 'logs';
   private readonly loggers: Map<string, Logger> = new Map();
 
   /**
@@ -66,7 +66,7 @@ export class LoggerService implements OnModuleInit {
     if (!this.loggers.has(category)) {
       this.loggers.set(category, new Logger(category));
     }
-    return this.loggers.get(category);
+    return this.loggers.get(category)!;
   }
 
   /**

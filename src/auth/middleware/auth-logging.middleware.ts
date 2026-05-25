@@ -19,7 +19,7 @@ export class AuthLoggingMiddleware implements NestMiddleware {
 
     // Create a response interceptor
     const originalSend = res.send;
-    res.send = function (body) {
+    res.send = function (body: any) {
       const responseTime = Date.now() - startTime;
       const statusCode = res.statusCode;
 

@@ -6,7 +6,6 @@ import {
   IsEnum,
   IsNotEmpty,
 } from 'class-validator';
-import { OmitType, PartialType } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -64,6 +63,4 @@ export class CreateUserDto {
   role?: UserRole;
 }
 
-export class UpdateUserDto extends PartialType(
-  OmitType(CreateUserDto, ['password'] as const),
-) {}
+

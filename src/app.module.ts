@@ -9,14 +9,14 @@ import { CategoryModule } from './category/category.module';
 import { ServiceModule } from './service/service.module';
 import { ServicepackageModule } from './servicepackage/servicepackage.module';
 import { ServiceassetModule } from './serviceasset/serviceasset.module';
-import { AvailabiltyModule } from './availabilty/availabilty.module';
+import { AvailabilityModule } from './availability/availability.module';
 import { BookingModule } from './booking/booking.module';
 import { ServiceorderModule } from './serviceorder/serviceorder.module';
-import { MeassagesModule } from './meassages/meassages.module';
-import { Proposal1Module } from './proposal1/proposal1.module';
-import { Contract1Module } from './contract1/contract1.module';
-import { Review1Module } from './review1/review1.module';
-import { Profile1Module } from './profile1/profile1.module';
+import { MessagesModule } from './messages/messages.module';
+import { ProposalModule } from './proposal/proposal.module';
+import { ContractModule } from './contract/contract.module';
+import { ReviewModule } from './review/review.module';
+import { ProfileModule } from './profile/profile.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { PaymentModule } from './payment/payment.module';
 import { CommonModule } from './common/common.module';
@@ -40,14 +40,14 @@ import { ServerConfig } from './config/server.config';
     ServiceModule,
     ServicepackageModule,
     ServiceassetModule,
-    AvailabiltyModule,
+    AvailabilityModule,
     BookingModule,
     ServiceorderModule,
-    MeassagesModule,
-    Proposal1Module,
-    Contract1Module,
-    Review1Module,
-    Profile1Module,
+    MessagesModule,
+    ProposalModule,
+    ContractModule,
+    ReviewModule,
+    ProfileModule,
     NotificationsModule,
     PaymentModule,
     CommonModule,
