@@ -5,8 +5,11 @@ import {
   ServiceOrderStatus,
   ContractStatus,
 } from '@prisma/client';
+import { PrismaNeon } from '@prisma/adapter-neon';
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL!;
+const adapter = new PrismaNeon({ connectionString });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log('🌱 Starting the seeding process...');
