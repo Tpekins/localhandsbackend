@@ -10,7 +10,7 @@ import { LoggerService } from '../services/logger.service';
 export class LogRotationUtil {
   private readonly maxFileSize = 10 * 1024 * 1024; // 10MB
   private readonly maxBackups = 5;
-  private readonly logDir = 'src/logs';
+  private readonly logDir = 'logs';
 
   constructor(private readonly logger: LoggerService) {}
 
