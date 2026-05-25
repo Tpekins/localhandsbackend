@@ -6,63 +6,71 @@ import { AllExceptionsFilter } from './common/filters';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { LoggerService } from './common/services/logger.service';
+import { ConfigService } from '@nestjs/config';
 import 'dotenv/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const logger = app.get(LoggerService);
-  // Enable CORS
-  app.enableCors({
-    origin: true, // Allow all origins in development
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  });
+  try {
+    const app = await NestFactory.create(AppModule);
+    const logger = app.get(LoggerService);
+    const configService = app.get(ConfigService);
 
-  // Global validation pipe
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
+    // Enable CORS
+    const corsOrigin = configService.get<string>('server.corsOrigin', '*');
+    app.enableCors({
+      origin: corsOrigin === '*' ? true : corsOrigin.split(','),
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    });
 
-  // Global exception filter
-  app.useGlobalFilters(new AllExceptionsFilter());
+    // Global validation pipe
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        forbidNonWhitelisted: true,
+      }),
+    );
 
-  // Global logging interceptor
-  app.useGlobalInterceptors(new LoggingInterceptor(logger));
+    // Global exception filter
+    app.useGlobalFilters(new AllExceptionsFilter());
 
-  // Compression
-  app.use(compression());
+    // Global logging interceptor
+    app.useGlobalInterceptors(new LoggingInterceptor(logger));
 
-  // Set global API prefix
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix, {
-    exclude: [
-      { path: '', method: RequestMethod.GET },
-      { path: 'health', method: RequestMethod.GET },
-    ],
-  });
+    // Compression
+    app.use(compression());
 
-  // Swagger documentation setup
-  const config = new DocumentBuilder()
-    .setTitle('LocalHands API')
-    .setDescription('The LocalHands marketplace API')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(`${globalPrefix}/docs`, app, document);
+    // Set global API prefix
+    const globalPrefix = 'api';
+    app.setGlobalPrefix(globalPrefix, {
+      exclude: [
+        { path: '', method: RequestMethod.GET },
+        { path: 'health', method: RequestMethod.GET },
+      ],
+    });
 
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => {
-    logger.info(
+    // Swagger documentation setup
+    const config = new DocumentBuilder()
+      .setTitle('LocalHands API')
+      .setDescription('The LocalHands marketplace API')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup(`${globalPrefix}/docs`, app, document);
+
+    const port = configService.get<number>('server.port', 3000);
+    await app.listen(port, '0.0.0.0');
+    void logger.info(
       'system',
       `Application is running on: http://localhost:${port}`,
     );
-  });
+  } catch (error) {
+    console.error('Failed to start application:', error);
+    process.exit(1);
+  }
 }
 
-bootstrap();
+void bootstrap();
