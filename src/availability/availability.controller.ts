@@ -9,15 +9,15 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { AvailabiltyService } from './availabilty.service';
-import { CreateAvailabiltyDto } from './dto/create-availabilty.dto';
-import { UpdateAvailabiltyDto } from './dto/update-availabilty.dto';
+import { AvailabilityService } from './availability.service';
+import { CreateAvailabilityDto } from './dto/create-availability.dto';
+import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-@ApiTags('Availabilities') // Group the controller under "Availabilities" in Swagger
-@Controller('availabilty')
-export class AvailabiltyController {
-  constructor(private readonly availabiltyService: AvailabiltyService) {}
+@ApiTags('Availabilities')
+@Controller('availability')
+export class AvailabilityController {
+  constructor(private readonly availabilityService: AvailabilityService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -27,8 +27,8 @@ export class AvailabiltyController {
     description: 'The availability has been successfully created.',
   })
   @ApiResponse({ status: 404, description: 'Provider not found.' })
-  create(@Body() createAvailabiltyDto: CreateAvailabiltyDto) {
-    return this.availabiltyService.create(createAvailabiltyDto);
+  create(@Body() createAvailabilityDto: CreateAvailabilityDto) {
+    return this.availabilityService.create(createAvailabilityDto);
   }
 
   @Get()
@@ -36,7 +36,7 @@ export class AvailabiltyController {
   @ApiOperation({ summary: 'Retrieve all availabilities' })
   @ApiResponse({ status: 200, description: 'List of all availabilities.' })
   findAll() {
-    return this.availabiltyService.findAll();
+    return this.availabilityService.findAll();
   }
 
   @Get(':id')
@@ -48,7 +48,7 @@ export class AvailabiltyController {
   })
   @ApiResponse({ status: 404, description: 'Availability not found.' })
   findOne(@Param('id') id: string) {
-    return this.availabiltyService.findOne(+id);
+    return this.availabilityService.findOne(+id);
   }
 
   @Patch(':id')
@@ -61,9 +61,9 @@ export class AvailabiltyController {
   @ApiResponse({ status: 404, description: 'Availability not found.' })
   update(
     @Param('id') id: string,
-    @Body() updateAvailabiltyDto: UpdateAvailabiltyDto,
+    @Body() updateAvailabilityDto: UpdateAvailabilityDto,
   ) {
-    return this.availabiltyService.update(+id, updateAvailabiltyDto);
+    return this.availabilityService.update(+id, updateAvailabilityDto);
   }
 
   @Delete(':id')
@@ -75,6 +75,6 @@ export class AvailabiltyController {
   })
   @ApiResponse({ status: 404, description: 'Availability not found.' })
   remove(@Param('id') id: string) {
-    return this.availabiltyService.remove(+id);
+    return this.availabilityService.remove(+id);
   }
 }

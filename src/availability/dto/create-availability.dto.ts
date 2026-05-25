@@ -1,7 +1,7 @@
 import { IsInt, IsDate, Min, Max } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
-export class CreateAvailabiltyDto {
+export class CreateAvailabilityDto {
   @IsInt({ message: 'Provider ID must be an integer and is required.' })
   providerId: number;
 
@@ -20,4 +20,4 @@ export class CreateAvailabiltyDto {
   endTime: Date;
 }
 
-export class UpdateAvailabiltyDto extends PartialType(CreateAvailabiltyDto) {}
+export class UpdateAvailabilityDto extends PartialType(CreateAvailabilityDto) {}

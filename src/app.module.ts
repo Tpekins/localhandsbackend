@@ -9,10 +9,10 @@ import { CategoryModule } from './category/category.module';
 import { ServiceModule } from './service/service.module';
 import { ServicepackageModule } from './servicepackage/servicepackage.module';
 import { ServiceassetModule } from './serviceasset/serviceasset.module';
-import { AvailabiltyModule } from './availabilty/availabilty.module';
+import { AvailabilityModule } from './availability/availability.module';
 import { BookingModule } from './booking/booking.module';
 import { ServiceorderModule } from './serviceorder/serviceorder.module';
-import { MeassagesModule } from './meassages/meassages.module';
+import { MessagesModule } from './messages/messages.module';
 import { Proposal1Module } from './proposal1/proposal1.module';
 import { Contract1Module } from './contract1/contract1.module';
 import { Review1Module } from './review1/review1.module';
@@ -40,10 +40,10 @@ import { ServerConfig } from './config/server.config';
     ServiceModule,
     ServicepackageModule,
     ServiceassetModule,
-    AvailabiltyModule,
+    AvailabilityModule,
     BookingModule,
     ServiceorderModule,
-    MeassagesModule,
+    MessagesModule,
     Proposal1Module,
     Contract1Module,
     Review1Module,
