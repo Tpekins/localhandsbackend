@@ -12,6 +12,10 @@ jobs:
     permissions:
       contents: read
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+
     steps:
       - uses: actions/checkout@v4
 
