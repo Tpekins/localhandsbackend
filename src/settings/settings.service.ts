@@ -37,17 +37,29 @@ export class SettingsService {
     };
   }
 
-  async updateSystemSettings(settings: SystemSettingsDto) {
+  async updateSystemSettings(dto: SystemSettingsDto) {
     const existingSettings = await this.prisma.systemSettings.findFirst();
+
+    const data = {
+      maintenance_mode: dto.maintenanceMode,
+      allow_registration: dto.allowRegistration,
+      review_auto_approve: dto.reviewAutoApprove,
+      payment_gateway: dto.paymentGateway,
+      email_notifications: dto.emailNotifications,
+      max_file_size: dto.maxFileSize,
+      currency: dto.currency,
+      currency_symbol: dto.currencySymbol,
+      supportEmail: dto.supportEmail,
+    };
 
     if (existingSettings) {
       await this.prisma.systemSettings.update({
         where: { id: existingSettings.id },
-        data: settings,
+        data,
       });
     } else {
       await this.prisma.systemSettings.create({
-        data: settings,
+        data,
       });
     }
 
