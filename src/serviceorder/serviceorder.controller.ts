@@ -9,10 +9,13 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ServiceorderService } from './serviceorder.service';
 import { CreateServiceorderDto } from './dto/create-serviceorder.dto';
 import { UpdateServiceorderDto } from './dto/update-serviceorder.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('Service Orders') // Group the controller under "Service Orders" in Swagger
@@ -20,6 +23,8 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 export class ServiceorderController {
   constructor(private readonly serviceorderService: ServiceorderService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new service order' })
@@ -55,6 +60,8 @@ export class ServiceorderController {
     return this.serviceorderService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update a specific service order by ID' })
@@ -70,6 +77,8 @@ export class ServiceorderController {
     return this.serviceorderService.update(+id, updateServiceorderDto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a specific service order by ID' })

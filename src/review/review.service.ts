@@ -16,7 +16,28 @@ export class ReviewService {
     return this.prisma.review.create({ data: { contractId, reviewerId, rating, comment } });
   }
 
-  async findAll() { return this.prisma.review.findMany({ include: { contract: true, reviewer: true } }); }
+  async findAll(filters?: { serviceId?: string; reviewerId?: string }) {
+    const where: any = {};
+    if (filters?.reviewerId) {
+      where.reviewerId = Number(filters.reviewerId);
+    }
+    if (filters?.serviceId) {
+      where.contract = {
+        serviceOrder: { serviceId: Number(filters.serviceId) },
+      };
+    }
+
+    return this.prisma.review.findMany({
+      where,
+      include: {
+        contract: {
+          include: { serviceOrder: { include: { service: true } } },
+        },
+        reviewer: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 
   async findOne(id: number) {
     const review = await this.prisma.review.findUnique({ where: { id }, include: { contract: true, reviewer: true } });
