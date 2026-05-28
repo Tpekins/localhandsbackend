@@ -21,8 +21,13 @@ export class ContractService {
     });
   }
 
-  async findAll() {
+  async findAll(filters?: { status?: string }) {
+    const where: any = {};
+    if (filters?.status) {
+      where.status = filters.status;
+    }
     return this.prisma.contract.findMany({
+      where,
       include: { serviceOrder: true, users: true },
     });
   }

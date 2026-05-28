@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -36,10 +37,10 @@ export class ContractController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Retrieve all contracts' })
+  @ApiOperation({ summary: 'Retrieve all contracts, optionally filtered by status' })
   @ApiResponse({ status: 200, description: 'List of all contracts.' })
-  findAll() {
-    return this.contractService.findAll();
+  findAll(@Query('status') status?: string) {
+    return this.contractService.findAll({ status });
   }
 
   @UseGuards(JwtAuthGuard)

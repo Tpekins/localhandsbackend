@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -33,10 +34,13 @@ export class ServiceorderController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Retrieve all service orders' })
+  @ApiOperation({ summary: 'Retrieve all service orders, optionally filtered by status or client' })
   @ApiResponse({ status: 200, description: 'List of all service orders.' })
-  findAll() {
-    return this.serviceorderService.findAll();
+  findAll(
+    @Query('status') status?: string,
+    @Query('clientId') clientId?: string,
+  ) {
+    return this.serviceorderService.findAll({ status, clientId });
   }
 
   @Get(':id')
