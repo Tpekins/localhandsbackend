@@ -30,6 +30,16 @@ async function bootstrap() {
         whitelist: true,
         transform: true,
         forbidNonWhitelisted: true,
+        exceptionFactory: (errors) => {
+          const messages = errors.map((err) => ({
+            field: err.property,
+            constraints: err.constraints,
+          }));
+          return new (require('@nestjs/common').BadRequestException)({
+            message: 'Validation failed',
+            errors: messages,
+          });
+        },
       }),
     );
 
