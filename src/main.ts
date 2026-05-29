@@ -20,6 +20,7 @@ async function bootstrap() {
       origin: [
         'https://localhands.africa',
         'https://www.localhands.africa',
+        'https://localhands-cm.vercel.app',
         'http://localhost:3000',
         'http://localhost:5173',
       ],
