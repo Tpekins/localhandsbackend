@@ -29,13 +29,15 @@ jobs:
           npm install
           npx prisma generate
           npm run build --if-present
+          npm prune --production
 
       - name: Zip artifact for deployment
         run: |
           zip -r release.zip . \
             --exclude ".git/*" \
-            --exclude "node_modules/*" \
             --exclude ".github/*" \
+            --exclude "src/*" \
+            --exclude "test/*" \
             --exclude ".gitignore" \
             --exclude "*.md" \
             --exclude ".env*"
@@ -65,12 +67,6 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_19C3E9B89C7C401EA58A0ED16C6E34DB }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DEDC00F9A06849DAA8F1DD25C70E3ACB }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_41DE85B55FDA43BF892B179E50D586EE }}
-
-      - name: Enable build during deployment
-        uses: azure/appservice-settings@v1
-        with:
-          app-name: 'localhandsbackend'
-          app-settings-json: '[{"name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "true"}]'
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
