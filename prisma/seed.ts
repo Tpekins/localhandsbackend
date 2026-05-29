@@ -7,7 +7,7 @@ import {
   BookingStatus,
 } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
