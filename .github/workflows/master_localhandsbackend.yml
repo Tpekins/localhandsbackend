@@ -29,13 +29,15 @@ jobs:
           npm install
           npx prisma generate
           npm run build --if-present
+          npm prune --production
 
       - name: Zip artifact for deployment
         run: |
           zip -r release.zip . \
             --exclude ".git/*" \
-            --exclude "node_modules/*" \
             --exclude ".github/*" \
+            --exclude "src/*" \
+            --exclude "test/*" \
             --exclude ".gitignore" \
             --exclude "*.md" \
             --exclude ".env*"
