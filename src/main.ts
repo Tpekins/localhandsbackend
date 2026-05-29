@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as compression from 'compression';
-import { ValidationPipe, RequestMethod } from '@nestjs/common';
+import { ValidationPipe, RequestMethod, BadRequestException, Logger } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
@@ -36,11 +36,13 @@ async function bootstrap() {
         transform: true,
         forbidNonWhitelisted: true,
         exceptionFactory: (errors) => {
+          const logger = new Logger('ValidationPipe');
           const messages = errors.map((err) => ({
             field: err.property,
             constraints: err.constraints,
           }));
-          return new (require('@nestjs/common').BadRequestException)({
+          logger.error(`Validation failed: ${JSON.stringify(messages)}`);
+          return new BadRequestException({
             message: 'Validation failed',
             errors: messages,
           });
