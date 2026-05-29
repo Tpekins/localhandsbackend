@@ -28,19 +28,10 @@ jobs:
         run: |
           npm install
           npx prisma generate
-          npm run build --if-present
-          npm prune --production
+          npm run build
 
       - name: Zip artifact for deployment
-        run: |
-          zip -r release.zip . \
-            --exclude ".git/*" \
-            --exclude ".github/*" \
-            --exclude "src/*" \
-            --exclude "test/*" \
-            --exclude ".gitignore" \
-            --exclude "*.md" \
-            --exclude ".env*"
+        run: zip -r release.zip . -x "node_modules/*" ".git/*"
        
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -68,7 +59,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DEDC00F9A06849DAA8F1DD25C70E3ACB }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_41DE85B55FDA43BF892B179E50D586EE }}
 
-      - name: Deploy to Azure Web App
+      - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
