@@ -31,7 +31,7 @@ jobs:
           npm run build --if-present
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip . --exclude ".git/*"
+        run: zip -r release.zip . --exclude "node_modules/*" --exclude ".git/*"
       
 
       - name: Upload artifact for deployment job
@@ -67,5 +67,4 @@ jobs:
           app-name: 'localhandsbackend'
           slot-name: 'Production'
           package: release.zip
-          clean: true
-          restart: true
+          enable-oryx-build: true
