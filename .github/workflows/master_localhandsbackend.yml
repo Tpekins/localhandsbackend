@@ -29,9 +29,10 @@ jobs:
           npm install
           npx prisma generate
           npm run build --if-present
+          npm prune --production
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip . --exclude "node_modules/*" --exclude ".git/*"
+        run: zip -r release.zip . --exclude ".git/*" --exclude "src/*" --exclude "prisma/*" --exclude "test/*"
       
 
       - name: Upload artifact for deployment job
@@ -67,4 +68,3 @@ jobs:
           app-name: 'localhandsbackend'
           slot-name: 'Production'
           package: release.zip
-          enable-oryx-build: true
