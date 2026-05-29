@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ServiceorderService } from './serviceorder.service';
 import { CreateServiceorderDto } from './dto/create-serviceorder.dto';
 import { UpdateServiceorderDto } from './dto/update-serviceorder.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('Service Orders') // Group the controller under "Service Orders" in Swagger
@@ -19,6 +23,8 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 export class ServiceorderController {
   constructor(private readonly serviceorderService: ServiceorderService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new service order' })
@@ -33,10 +39,13 @@ export class ServiceorderController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Retrieve all service orders' })
+  @ApiOperation({ summary: 'Retrieve all service orders, optionally filtered by status or client' })
   @ApiResponse({ status: 200, description: 'List of all service orders.' })
-  findAll() {
-    return this.serviceorderService.findAll();
+  findAll(
+    @Query('status') status?: string,
+    @Query('clientId') clientId?: string,
+  ) {
+    return this.serviceorderService.findAll({ status, clientId });
   }
 
   @Get(':id')
@@ -51,6 +60,8 @@ export class ServiceorderController {
     return this.serviceorderService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update a specific service order by ID' })
@@ -66,6 +77,8 @@ export class ServiceorderController {
     return this.serviceorderService.update(+id, updateServiceorderDto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a specific service order by ID' })

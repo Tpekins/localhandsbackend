@@ -38,8 +38,17 @@ export class ServiceorderService {
     });
   }
 
-  async findAll() {
+  async findAll(filters?: { status?: string; clientId?: string }) {
+    const where: any = {};
+    if (filters?.status) {
+      where.status = filters.status;
+    }
+    if (filters?.clientId) {
+      where.clientId = Number(filters.clientId);
+    }
+
     return this.prisma.serviceOrder.findMany({
+      where,
       include: {
         service: true, // Include service details
         client: true, // Include client details

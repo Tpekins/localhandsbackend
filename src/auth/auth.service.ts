@@ -1,4 +1,8 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -22,7 +26,6 @@ export class AuthService {
     password: string,
   ): Promise<Omit<User, 'passwordHash'> | null> {
     let user: User;
-    // Try to find user by email or phone number
     try {
       if (identifier.includes('@')) {
         user = await this.usersService.findByEmail(identifier);
@@ -52,15 +55,40 @@ export class AuthService {
       throw new ForbiddenException('Invalid credentials');
     }
 
+    await this.usersService.updateLastLogin(validatedUser.id);
+
     const payload = {
       email: validatedUser.email,
       phoneNumber: validatedUser.phoneNumber,
       sub: validatedUser.id,
+      name: validatedUser.name,
+      role: validatedUser.role,
     };
 
     return {
       access_token: this.jwtService.sign(payload),
       user: validatedUser,
     };
+  }
+
+  async changePassword(
+    userId: number,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.usersService.findOneWithPassword(userId);
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.passwordHash,
+    );
+    if (!isPasswordValid) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await this.usersService.update(userId, { passwordHash } as any);
+
+    return { message: 'Password changed successfully' };
   }
 }

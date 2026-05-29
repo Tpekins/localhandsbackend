@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ProposalService } from './proposal.service';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -26,9 +26,11 @@ export class ProposalController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Retrieve all proposals' })
+  @ApiOperation({ summary: 'Retrieve all proposals, optionally filtered by provider' })
   @ApiResponse({ status: 200, description: 'List of all proposals.' })
-  findAll() { return this.proposalService.findAll(); }
+  findAll(@Query('providerId') providerId?: string) {
+    return this.proposalService.findAll({ providerId });
+  }
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

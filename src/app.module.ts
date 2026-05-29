@@ -22,6 +22,7 @@ import { PaymentModule } from './payment/payment.module';
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
 import { ClientModule } from './client/client.module';
+import { SettingsModule } from './settings/settings.module';
 import { PaymentConfig } from './config/payment.config';
 import { ServerConfig } from './config/server.config';
 
@@ -53,6 +54,7 @@ import { ServerConfig } from './config/server.config';
     CommonModule,
     HealthModule,
     ClientModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [],

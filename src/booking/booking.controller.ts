@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -39,10 +40,10 @@ export class BookingController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Retrieve all bookings' })
+  @ApiOperation({ summary: 'Retrieve all bookings, optionally filtered by client' })
   @ApiResponse({ status: 200, description: 'List of all bookings.' })
-  findAll() {
-    return this.bookingService.findAll();
+  findAll(@Query('clientId') clientId?: string) {
+    return this.bookingService.findAll({ clientId });
   }
 
   @UseGuards(JwtAuthGuard)

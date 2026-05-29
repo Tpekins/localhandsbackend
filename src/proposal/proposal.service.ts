@@ -18,7 +18,13 @@ export class ProposalService {
     });
   }
 
-  async findAll() { return this.prisma.proposal.findMany({ include: { provider: true, service: true } }); }
+  async findAll(filters?: { providerId?: string }) {
+    const where: any = {};
+    if (filters?.providerId) {
+      where.providerId = Number(filters.providerId);
+    }
+    return this.prisma.proposal.findMany({ where, include: { provider: true, service: true } });
+  }
 
   async findOne(id: number) {
     const proposal = await this.prisma.proposal.findUnique({ where: { id }, include: { provider: true, service: true } });

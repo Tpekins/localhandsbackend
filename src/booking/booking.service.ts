@@ -40,8 +40,13 @@ export class BookingService {
     });
   }
 
-  async findAll() {
+  async findAll(filters?: { clientId?: string }) {
+    const where: any = {};
+    if (filters?.clientId) {
+      where.clientId = Number(filters.clientId);
+    }
     return this.prisma.booking.findMany({
+      where,
       include: {
         service: true, // Include service details
         client: true, // Include client details

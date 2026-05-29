@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('Reviews')
 @Controller('review')
@@ -18,9 +18,16 @@ export class ReviewController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Retrieve all reviews' })
+  @ApiOperation({ summary: 'Retrieve all reviews, optionally filtered by service or reviewer' })
+  @ApiQuery({ name: 'serviceId', required: false, description: 'Filter reviews by service ID (via contract → service order)' })
+  @ApiQuery({ name: 'reviewerId', required: false, description: 'Filter reviews by reviewer (provider) ID' })
   @ApiResponse({ status: 200, description: 'List of all reviews.' })
-  findAll() { return this.reviewService.findAll(); }
+  findAll(
+    @Query('serviceId') serviceId?: string,
+    @Query('reviewerId') reviewerId?: string,
+  ) {
+    return this.reviewService.findAll({ serviceId, reviewerId });
+  }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)

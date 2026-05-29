@@ -15,10 +15,14 @@ async function bootstrap() {
     const logger = app.get(LoggerService);
     const configService = app.get(ConfigService);
 
-    // Enable CORS
-    const corsOrigin = configService.get<string>('server.corsOrigin', '*');
+    // Enable CORS — allow both production domain and localhost
     app.enableCors({
-      origin: corsOrigin === '*' ? true : corsOrigin.split(','),
+      origin: [
+        'https://localhands.africa',
+        'https://www.localhands.africa',
+        'http://localhost:3000',
+        'http://localhost:5173',
+      ],
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization'],
@@ -30,6 +34,16 @@ async function bootstrap() {
         whitelist: true,
         transform: true,
         forbidNonWhitelisted: true,
+        exceptionFactory: (errors) => {
+          const messages = errors.map((err) => ({
+            field: err.property,
+            constraints: err.constraints,
+          }));
+          return new (require('@nestjs/common').BadRequestException)({
+            message: 'Validation failed',
+            errors: messages,
+          });
+        },
       }),
     );
 

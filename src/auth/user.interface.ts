@@ -1,8 +1,7 @@
 export interface AuthenticatedUser {
-  id: string;
+  id: number;
   name: string;
   email: string;
   role: string;
-  avatar?: string;
   phoneNumber?: string;
 }

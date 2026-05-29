@@ -62,6 +62,15 @@ export class ServiceController {
     return this.serviceService.findByProvider(+providerId);
   }
 
+  @Get('featured')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get featured services' })
+  @ApiResponse({ status: 200, description: 'List of featured services.' })
+  async findFeatured(@Query('limit') limit?: string) {
+    const limitNum = limit ? parseInt(limit, 10) : 6;
+    return this.serviceService.findFeatured(limitNum);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific service by ID' })
@@ -140,14 +149,5 @@ export class ServiceController {
   @ApiResponse({ status: 404, description: 'Service not found.' })
   incrementViews(@Param('id') id: string) {
     return this.serviceService.incrementViews(+id);
-  }
-
-  @Get('featured')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get featured services' })
-  @ApiResponse({ status: 200, description: 'List of featured services.' })
-  async findFeatured(@Query('limit') limit?: string) {
-    const limitNum = limit ? parseInt(limit, 10) : 6;
-    return this.serviceService.findFeatured(limitNum);
   }
 }

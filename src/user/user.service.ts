@@ -4,6 +4,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -43,9 +44,11 @@ export class UserService {
       },
       select: {
         id: true,
+        name: true,
         email: true,
         phoneNumber: true,
         role: true,
+        createdAt: true,
         profile: {
           omit: {
             bankAccountNumber: true,
@@ -60,8 +63,11 @@ export class UserService {
 
   async findAll() {
     return this.prisma.user.findMany({
+      omit: {
+        passwordHash: true,
+      },
       include: {
-        profile: true, // Include the user's profile in the response
+        profile: true,
       },
     });
   }
@@ -69,8 +75,24 @@ export class UserService {
   async findOne(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
+      omit: {
+        passwordHash: true,
+      },
       include: {
-        profile: true, // Include the user's profile in the response
+        profile: true,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
+  }
+
+  async findOneWithPassword(id: number): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        profile: true,
       },
     });
     if (!user) {
@@ -112,6 +134,9 @@ export class UserService {
     return this.prisma.user.update({
       where: { id },
       data: updateUserDto,
+      omit: {
+        passwordHash: true,
+      },
     });
   }
 
@@ -123,14 +148,22 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    // Delete the user's profile first (if it exists)
     await this.prisma.profile.delete({
       where: { userId: id },
     });
 
-    // Delete the user
     return this.prisma.user.delete({
       where: { id },
+      omit: {
+        passwordHash: true,
+      },
+    });
+  }
+
+  async updateLastLogin(id: number) {
+    return this.prisma.user.update({
+      where: { id },
+      data: { lastLogin: new Date() },
     });
   }
 
