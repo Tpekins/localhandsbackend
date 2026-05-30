@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
   PrismaClient,
   UserRole,
@@ -5,13 +6,10 @@ import {
   ServiceOrderStatus,
   ContractStatus,
   BookingStatus,
-} from '@prisma/client';
+} from '../src/generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import * as bcrypt from 'bcryptjs';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 const rawUrl = process.env.DATABASE_URL!;
 const connectionString = rawUrl.replace(/&?channel_binding=require/g, '');

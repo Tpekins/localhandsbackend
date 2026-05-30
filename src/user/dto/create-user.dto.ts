@@ -6,7 +6,7 @@ import {
   IsEnum,
   IsNotEmpty,
 } from 'class-validator';
-import { UserRole } from '@prisma/client';
+import { UserRole } from '../../generated/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -62,5 +62,3 @@ export class CreateUserDto {
   @IsEnum(UserRole, { message: 'Role must be a valid user role if provided.' })
   role?: UserRole;
 }
-
-

@@ -108,7 +108,7 @@ export class LogRotationUtil {
   scheduleRotation(intervalMs: number = 24 * 60 * 60 * 1000): NodeJS.Timeout {
     return setInterval(() => {
       this.checkAndRotateAll().catch(error => {
-        this.logger.error(
+        void this.logger.error(
           'system',
           'Failed to run scheduled log rotation',
           error,

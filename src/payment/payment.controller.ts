@@ -14,7 +14,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { PaymentStatus } from '@prisma/client';
+import { PaymentStatus } from '../generated/client';
 import {
   GeneratePaymentLinkDto,
   DirectPaymentDto,
@@ -100,7 +100,7 @@ export class PaymentController {
         message: 'Payment initialized successfully.',
         paymentLink: result.paymentLink,
       };
-    } catch (error) {
+    } catch (error: any) {
       if (error?.response?.data) {
         return {
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,

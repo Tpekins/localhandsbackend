@@ -1,4 +1,11 @@
-import { IsInt, IsString, IsOptional, IsPositive, Min, Max } from 'class-validator';
+import {
+  IsInt,
+  IsString,
+  IsOptional,
+  IsPositive,
+  Min,
+  Max,
+} from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateReviewDto {

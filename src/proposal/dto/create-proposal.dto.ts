@@ -9,10 +9,14 @@ export class CreateProposalDto {
   serviceId: number;
 
   @IsString({ message: 'Cover letter must be a string and is required.' })
-  @Length(10, 1000, { message: 'Cover letter must be between 10 and 1000 characters.' })
+  @Length(10, 1000, {
+    message: 'Cover letter must be between 10 and 1000 characters.',
+  })
   coverLetter: string;
 
-  @IsPositive({ message: 'Bid amount must be a positive number and is required.' })
+  @IsPositive({
+    message: 'Bid amount must be a positive number and is required.',
+  })
   bidAmount: number;
 }
 

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { Prisma } from '../generated/browser';
 
 @Injectable()
 export class MessagesService {
@@ -10,12 +11,16 @@ export class MessagesService {
   async create(createMessageDto: CreateMessageDto) {
     const { senderId, receiverId, content } = createMessageDto;
 
-    const sender = await this.prisma.user.findUnique({ where: { id: senderId } });
+    const sender = await this.prisma.user.findUnique({
+      where: { id: senderId },
+    });
     if (!sender) {
       throw new NotFoundException(`Sender with ID ${senderId} not found`);
     }
 
-    const receiver = await this.prisma.user.findUnique({ where: { id: receiverId } });
+    const receiver = await this.prisma.user.findUnique({
+      where: { id: receiverId },
+    });
     if (!receiver) {
       throw new NotFoundException(`Receiver with ID ${receiverId} not found`);
     }
@@ -27,7 +32,7 @@ export class MessagesService {
   }
 
   async findAll(filters?: { senderId?: string; receiverId?: string }) {
-    const where: any = {};
+    const where: Prisma.MessageWhereInput = {};
     if (filters?.senderId) where.senderId = Number(filters.senderId);
     if (filters?.receiverId) where.receiverId = Number(filters.receiverId);
 

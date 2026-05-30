@@ -16,7 +16,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET') || process.env.JWT_SECRET || 'localhands-secret',
+        secret:
+          config.get<string>('JWT_SECRET') ||
+          process.env.JWT_SECRET ||
+          'localhands-secret',
         signOptions: { expiresIn: '1h' },
       }),
     }),

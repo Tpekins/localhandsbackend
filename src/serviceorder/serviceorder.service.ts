@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceorderDto } from './dto/create-serviceorder.dto';
 import { UpdateServiceorderDto } from './dto/update-serviceorder.dto';
+import { Prisma, ServiceOrderStatus } from '../generated/client';
 
 @Injectable()
 export class ServiceorderService {
@@ -39,9 +40,9 @@ export class ServiceorderService {
   }
 
   async findAll(filters?: { status?: string; clientId?: string }) {
-    const where: any = {};
+    const where: Prisma.ServiceOrderWhereInput = {};
     if (filters?.status) {
-      where.status = filters.status;
+      where.status = filters.status as ServiceOrderStatus;
     }
     if (filters?.clientId) {
       where.clientId = Number(filters.clientId);

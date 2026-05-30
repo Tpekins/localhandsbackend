@@ -4,9 +4,14 @@ import {
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
+import type { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoggerService } from '../services/logger.service';
+
+interface RequestUser {
+  id?: number;
+}
 
 /**
  * Global interceptor for logging HTTP requests and responses
@@ -18,14 +23,16 @@ export class LoggingInterceptor implements NestInterceptor {
   /**
    * Intercept and log HTTP requests/responses
    */
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const req = context.switchToHttp().getRequest();
-    const { method, url, body, user } = req;
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    const req = context.switchToHttp().getRequest<Request>();
+    const { method, url } = req;
+    const body = req.body as Record<string, unknown> | undefined;
+    const user = (req as Request & { user?: RequestUser }).user;
     const userAgent = req.get('user-agent') || '';
     const startTime = Date.now();
 
     // Log the incoming request
-    this.logger.info('activity', `Incoming ${method} ${url}`, {
+    void this.logger.info('activity', `Incoming ${method} ${url}`, {
       method,
       url,
       userId: user?.id,
@@ -35,25 +42,26 @@ export class LoggingInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap({
-        next: (data: any) => {
+        next: (data: unknown) => {
           const responseTime = Date.now() - startTime;
 
           // Log successful response
-          this.logger.info('activity', `${method} ${url} completed`, {
+          void this.logger.info('activity', `${method} ${url} completed`, {
             method,
             url,
             userId: user?.id,
             userAgent,
             responseTime,
-            statusCode: context.switchToHttp().getResponse().statusCode,
+            statusCode: context.switchToHttp().getResponse<Response>()
+              .statusCode,
             responseData: this.sanitizeResponse(data),
           });
         },
-        error: error => {
+        error: (error: Error) => {
           const responseTime = Date.now() - startTime;
 
           // Log error response
-          this.logger.error('error', `${method} ${url} failed`, {
+          void this.logger.error('error', `${method} ${url} failed`, {
             method,
             url,
             userId: user?.id,
@@ -74,7 +82,9 @@ export class LoggingInterceptor implements NestInterceptor {
    * Remove sensitive information from request body
    * @private
    */
-  private sanitizeBody(body: any): any {
+  private sanitizeBody(
+    body: Record<string, unknown> | undefined,
+  ): Record<string, unknown> | undefined {
     if (!body) return body;
 
     const sanitized = { ...body };
@@ -93,7 +103,7 @@ export class LoggingInterceptor implements NestInterceptor {
    * Remove sensitive information from response data
    * @private
    */
-  private sanitizeResponse(data: any): any {
+  private sanitizeResponse(data: unknown): unknown {
     if (!data) return data;
 
     // If data is an array, sanitize each item
@@ -103,7 +113,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     // If data is an object, create a sanitized copy
     if (typeof data === 'object') {
-      const sanitized = { ...data };
+      const sanitized = { ...(data as Record<string, unknown>) };
       const sensitiveFields = ['password', 'token', 'creditCard'];
 
       sensitiveFields.forEach(field => {

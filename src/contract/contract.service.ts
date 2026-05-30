@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
+import { ContractStatus, Prisma } from '../generated/browser';
 
 @Injectable()
 export class ContractService {
@@ -13,7 +14,9 @@ export class ContractService {
       where: { id: serviceOrderId },
     });
     if (!serviceOrder) {
-      throw new NotFoundException(`Service order with ID ${serviceOrderId} not found`);
+      throw new NotFoundException(
+        `Service order with ID ${serviceOrderId} not found`,
+      );
     }
     return this.prisma.contract.create({
       data: { serviceOrderId, escrowAmount, status: status || 'ACTIVE' },
@@ -21,8 +24,8 @@ export class ContractService {
     });
   }
 
-  async findAll(filters?: { status?: string }) {
-    const where: any = {};
+  async findAll(filters?: { status?: ContractStatus }) {
+    const where: Prisma.ContractWhereInput = {};
     if (filters?.status) {
       where.status = filters.status;
     }

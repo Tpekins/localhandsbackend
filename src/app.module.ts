@@ -30,7 +30,7 @@ import { ServerConfig } from './config/server.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
       load: [PaymentConfig, ServerConfig],
     }),
     PrismaModule,

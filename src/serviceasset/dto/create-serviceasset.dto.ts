@@ -1,6 +1,6 @@
 import { IsInt, IsString, IsOptional, IsIn } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
-import { AssetType } from '@prisma/client';
+import { AssetType } from '../../generated/client';
 
 export class CreateServiceassetDto {
   @IsInt({ message: 'Service ID must be an integer and is required.' })
