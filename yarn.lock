@@ -1148,6 +1148,11 @@
   resolved "https://registry.npmjs.org/@microsoft/tsdoc/-/tsdoc-0.15.1.tgz"
   integrity sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==
 
+"@neondatabase/serverless@>0.6.0 <2":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@neondatabase/serverless/-/serverless-1.1.0.tgz#35046d1125932153dd306bd3d7c269306914e005"
+  integrity sha512-r3ZZhRjEcfEdKIZnoB1RusNgvHuaBRqfCzV4Gi+5A9yUX0S4HTws/ASWqt13wL4y4I+0rqsWGdA2w7EQXHi3+Q==
+
 "@nestjs/axios@^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmjs.org/@nestjs/axios/-/axios-4.0.0.tgz"
@@ -1344,6 +1349,15 @@
   version "0.2.0"
   resolved "https://registry.npmjs.org/@pkgr/core/-/core-0.2.0.tgz"
   integrity sha512-vsJDAkYR6qCPu+ioGScGiMYR7LvZYIXh/dlQeviqoTWNCVfKTLYD/LkNWH4Mxsv2a5vpIRc77FN5DnmK1eBggQ==
+
+"@prisma/adapter-neon@^7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@prisma/adapter-neon/-/adapter-neon-7.8.0.tgz#f1d8df4adf5b51d24e5811fc6bb89ca897bff3ff"
+  integrity sha512-9MoOjRuY53sQNyji87u1NivsK0tIacoUE3PqTxdG95b7ORn1pzwribH2z83j4Vh3eb9nQ/UC+MTfVW7jCFnXlA==
+  dependencies:
+    "@neondatabase/serverless" ">0.6.0 <2"
+    "@prisma/driver-adapter-utils" "7.8.0"
+    postgres-array "3.0.4"
 
 "@prisma/adapter-pg@^7.8.0":
   version "7.8.0"
