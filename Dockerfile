@@ -90,4 +90,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 # START COMMAND
 # ==========================================
 # Start the NestJS application in production mode
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
