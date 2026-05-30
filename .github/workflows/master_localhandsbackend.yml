@@ -24,15 +24,15 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: npm install, generate prisma, and build
+      - name: Install dependencies, generate prisma, and build
         run: |
-          npm install
+          yarn install --frozen-lockfile
           npx prisma generate
-          npm run build
+          yarn build
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip . -x "node_modules/*" ".git/*"
-       
+        run: zip -r release.zip . --exclude ".git/*"
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
