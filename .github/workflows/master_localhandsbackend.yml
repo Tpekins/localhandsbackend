@@ -27,11 +27,12 @@ jobs:
       - name: Install dependencies, generate prisma, and build
         run: |
           yarn install --frozen-lockfile
+          yarn add @prisma/adapter-neon
           npx prisma generate
           yarn build
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip . --exclude ".git/*" "node_modules/*"
+        run: zip -r release.zip . --exclude ".git/*" --exclude "node_modules/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
