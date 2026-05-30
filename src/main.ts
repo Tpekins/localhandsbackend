@@ -16,15 +16,21 @@ async function bootstrap() {
     const logger = app.get(LoggerService);
     const configService = app.get(ConfigService);
 
-    // Enable CORS — allow both production domain and localhost
+    // Enable CORS — use CORS_ORIGIN env var or fall back to hardcoded defaults
+    const corsOrigin = configService.get<string>('server.corsOrigin');
+    const defaultOrigins = [
+      'https://localhands.africa',
+      'https://www.localhands.africa',
+      'https://localhands-cm.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:5173',
+    ];
+    const allowedOrigins = corsOrigin
+      ? corsOrigin.split(',').map((o) => o.trim())
+      : defaultOrigins;
+
     app.enableCors({
-      origin: [
-        'https://localhands.africa',
-        'https://www.localhands.africa',
-        'https://localhands-cm.vercel.app',
-        'http://localhost:3000',
-        'http://localhost:5173',
-      ],
+      origin: allowedOrigins,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization'],
@@ -79,7 +85,7 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup(`${globalPrefix}/docs`, app, document);
 
-    const port = configService.get<number>('server.port', 3000);
+    const port = parseInt(process.env.PORT || '3000', 10);
     await app.listen(port, '0.0.0.0');
     void logger.info(
       'system',
