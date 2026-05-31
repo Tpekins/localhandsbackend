@@ -5,6 +5,8 @@ datasource db {
 generator client {
   provider = "prisma-client"
   output   = "../src/generated"
+  moduleFormat = "cjs"
+  runtime = "nodejs"
 }
 
 enum UserRole {
