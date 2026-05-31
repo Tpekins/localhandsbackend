@@ -1,9 +1,9 @@
 export class User {
-  id: number;
-  role: string; // UserRole enum (PROVIDER, CLIENT, ADMIN)
-  phoneNumber: string;
-  email: string;
-  passwordHash: string;
+  id!: number;
+  role!: string; // UserRole enum (PROVIDER, CLIENT, ADMIN)
+  phoneNumber!: string;
+  email!: string;
+  passwordHash!: string;
   profile?: any; // Associated profile
   services?: any[]; // Associated services
   serviceOrders?: any[]; // Associated service orders
@@ -14,6 +14,6 @@ export class User {
   proposals?: any[]; // Associated proposals
   messages?: any[]; // Associated messages
   servicePackages?: any[]; // Associated service packages
-  createdAt: Date;
+  createdAt!: Date;
   lastLogin?: Date;
 }

@@ -8,7 +8,7 @@ export class CreateProfileDto {
     description: 'ID of the user this profile belongs to',
   })
   @IsInt({ message: 'User ID must be an integer and is required.' })
-  userId: number;
+  userId!: number;
 
   @ApiProperty({
     example: 'I am a professional service provider',

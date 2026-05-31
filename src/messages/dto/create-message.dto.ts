@@ -3,13 +3,13 @@ import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateMessageDto {
   @IsInt({ message: 'Sender ID must be an integer and is required.' })
-  senderId: number;
+  senderId!: number;
 
   @IsInt({ message: 'Receiver ID must be an integer and is required.' })
-  receiverId: number;
+  receiverId!: number;
 
   @IsString({ message: 'Content must be a string and is required.' })
-  content: string;
+  content!: string;
 
   @IsOptional()
   @IsInt({ message: 'Contract ID must be an integer if provided.' })

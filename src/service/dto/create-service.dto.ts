@@ -18,7 +18,7 @@ export class CreateServiceDto {
   })
   @IsString({ message: 'Title must be a string and is required.' })
   @Length(3, 100, { message: 'Title must be between 3 and 100 characters.' })
-  title: string;
+  title!: string;
 
   @ApiProperty({
     example:
@@ -31,7 +31,7 @@ export class CreateServiceDto {
   @Length(10, 1000, {
     message: 'Description must be between 10 and 1000 characters.',
   })
-  description: string;
+  description!: string;
 
   @ApiProperty({
     example: 1,
@@ -49,7 +49,7 @@ export class CreateServiceDto {
   })
   @IsNumber({}, { message: 'Price must be a number and is required.' })
   @IsPositive({ message: 'Price must be a positive number.' })
-  price: number;
+  price!: number;
 
   @ApiProperty({
     example: 'available',
@@ -69,7 +69,7 @@ export class CreateServiceDto {
     description: 'ID of the service provider',
   })
   @IsNumber({}, { message: 'Provider ID must be a number and is required.' })
-  providerId: number;
+  providerId!: number;
 }
 
 export class UpdateServiceDto extends PartialType(CreateServiceDto) {}

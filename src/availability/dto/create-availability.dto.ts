@@ -3,7 +3,7 @@ import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateAvailabilityDto {
   @IsInt({ message: 'Provider ID must be an integer and is required.' })
-  providerId: number;
+  providerId!: number;
 
   @IsInt({
     message:
@@ -11,13 +11,13 @@ export class CreateAvailabilityDto {
   })
   @Min(0, { message: 'Day of the week cannot be less than 0 (Sunday).' })
   @Max(6, { message: 'Day of the week cannot be greater than 6 (Saturday).' })
-  dayOfWeek: number;
+  dayOfWeek!: number;
 
   @IsDate({ message: 'Start time must be a valid date and is required.' })
-  startTime: Date;
+  startTime!: Date;
 
   @IsDate({ message: 'End time must be a valid date and is required.' })
-  endTime: Date;
+  endTime!: Date;
 }
 
 export class UpdateAvailabilityDto extends PartialType(CreateAvailabilityDto) {}

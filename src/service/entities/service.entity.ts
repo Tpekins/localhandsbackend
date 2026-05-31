@@ -1,12 +1,12 @@
 export class Service {
-  id: number; // Unique identifier for the service
-  title: string; // Title of the service
-  description: string; // Description of the service
+  id!: number; // Unique identifier for the service
+  title!: string; // Title of the service
+  description!: string; // Description of the service
   categoryId?: number; // ID of the associated category (optional)
-  price: number; // Price of the service
-  status: string; // Status of the service (available, unavailable, archived)
-  providerId: number; // ID of the provider offering the service
-  createdAt: Date; // Timestamp when the service was created
+  price!: number; // Price of the service
+  status!: string; // Status of the service (available, unavailable, archived)
+  providerId!: number; // ID of the provider offering the service
+  createdAt!: Date; // Timestamp when the service was created
 
   // Relationships
   category?: any; // Associated category

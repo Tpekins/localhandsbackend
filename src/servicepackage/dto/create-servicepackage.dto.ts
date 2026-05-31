@@ -9,11 +9,11 @@ import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateServicepackageDto {
   @IsInt({ message: 'Provider ID must be an integer and is required.' })
-  providerId: number;
+  providerId!: number;
 
   @IsString({ message: 'Title must be a string and is required.' })
   @Length(3, 100, { message: 'Title must be between 3 and 100 characters.' })
-  title: string;
+  title!: string;
 
   @IsOptional()
   @IsString({ message: 'Description must be a string if provided.' })
@@ -21,7 +21,7 @@ export class CreateServicepackageDto {
   description?: string;
 
   @IsPositive({ message: 'Price must be a positive number and is required.' })
-  price: number;
+  price!: number;
 }
 
 export class UpdateServicepackageDto extends PartialType(

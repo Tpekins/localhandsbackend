@@ -4,13 +4,13 @@ import { AssetType } from '../../generated/client';
 
 export class CreateServiceassetDto {
   @IsInt({ message: 'Service ID must be an integer and is required.' })
-  serviceId: number;
+  serviceId!: number;
 
   @IsString({ message: 'Type must be a string and is required.' })
   @IsIn(['IMAGE', 'AREA'], {
     message: 'Type must be either "IMAGE" or "AREA".',
   })
-  type: AssetType;
+  type!: AssetType;
 
   @IsOptional()
   @IsString({ message: 'Image URL must be a string if provided.' })
