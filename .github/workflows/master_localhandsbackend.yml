@@ -32,7 +32,7 @@ jobs:
           yarn build
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip . --exclude ".git/*"
+        run: zip -r release.zip dist package.json yarn.lock prisma web.config  
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
