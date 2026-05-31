@@ -4,31 +4,31 @@ import { ApiProperty } from '@nestjs/swagger';
 export class SystemSettingsDto {
   @ApiProperty({ example: false })
   @IsBoolean()
-  maintenanceMode: boolean;
+  maintenanceMode!: boolean;
 
   @ApiProperty({ example: true })
   @IsBoolean()
-  allowRegistration: boolean;
+  allowRegistration!: boolean;
 
   @ApiProperty({ example: false })
   @IsBoolean()
-  reviewAutoApprove: boolean;
+  reviewAutoApprove!: boolean;
 
   @ApiProperty({ example: 'fapshi' })
   @IsString()
-  paymentGateway: string;
+  paymentGateway!: string;
 
   @ApiProperty({ example: true })
   @IsBoolean()
-  emailNotifications: boolean;
+  emailNotifications!: boolean;
 
   @ApiProperty({ example: 5 })
   @IsNumber()
-  maxFileSize: number;
+  maxFileSize!: number;
 
   @ApiProperty({ example: 'XAF' })
   @IsString()
-  currency: string;
+  currency!: string;
 
   @ApiProperty({ example: 'FCFA', required: false })
   @IsOptional()

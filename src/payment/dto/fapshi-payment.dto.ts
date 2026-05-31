@@ -16,7 +16,7 @@ import {
 export class GeneratePaymentLinkDto {
   @IsNumber()
   @Min(100, { message: 'Amount must be greater than or equal to 100 XAF' })
-  amount: number;
+  amount!: number;
 
   @IsOptional()
   @IsEmail({}, { message: 'Invalid email format' })
@@ -58,10 +58,10 @@ export class GeneratePaymentLinkDto {
 // Response from payment link generation
 export class PaymentLinkResponseDto {
   @IsString()
-  link: string;
+  link!: string;
 
   @IsString()
-  transId: string;
+  transId!: string;
 }
 
 // Enum for payment status
@@ -76,13 +76,13 @@ export enum FapshiPaymentStatus {
 // Payment status response DTO
 export class PaymentStatusResponseDto {
   @IsString()
-  transId: string;
+  transId!: string;
 
   @IsEnum(FapshiPaymentStatus)
-  status: FapshiPaymentStatus;
+  status!: FapshiPaymentStatus;
 
   @IsNumber()
-  amount: number;
+  amount!: number;
 
   @IsOptional()
   @IsString()
@@ -113,7 +113,7 @@ export class PaymentStatusResponseDto {
 export class ExpirePaymentDto {
   @IsString()
   @IsNotEmpty({ message: 'Transaction ID is required' })
-  transId: string;
+  transId!: string;
 }
 
 // Direct payment DTO
@@ -124,14 +124,14 @@ export enum PaymentMedium {
 export class DirectPaymentDto {
   @IsNumber()
   @Min(100, { message: 'Amount must be greater than or equal to 100 XAF' })
-  amount: number;
+  amount!: number;
 
   @IsString()
   @IsNotEmpty({ message: 'Phone number is required' })
   @Matches(/^6[9875]{1}[0-9]{7}$/, {
     message: 'Invalid phone number format. Must be in the format 69xxxxxxx',
   })
-  phone: string;
+  phone!: string;
 
   @IsOptional()
   @IsEnum(PaymentMedium, {
@@ -177,7 +177,7 @@ export class DirectPaymentDto {
 // Direct payment response DTO
 export class DirectPaymentResponseDto {
   @IsString()
-  transId: string;
+  transId!: string;
 }
 
 // Search transactions query parameters DTO
@@ -237,5 +237,5 @@ export class SearchTransactionsDto {
 // Balance response DTO
 export class BalanceResponseDto {
   @IsNumber()
-  balance: number;
+  balance!: number;
 }

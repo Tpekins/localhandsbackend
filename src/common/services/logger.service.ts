@@ -77,7 +77,7 @@ export class LoggerService implements OnModuleInit {
     category: string,
     level: string,
     message: string,
-    data?: any,
+    data?: unknown,
   ) {
     const timestamp = new Date().toISOString();
     const logEntry =
@@ -102,9 +102,10 @@ export class LoggerService implements OnModuleInit {
   /**
    * Log error messages
    */
-  async error(category: string, message: string, error?: Error | any) {
+  async error(category: string, message: string, error?: unknown) {
     const logger = this.getLogger(category);
-    logger.error(message, error?.stack);
+    const stack = error instanceof Error ? error.stack : undefined;
+    logger.error(message, stack);
     await this.writeToFile(category, 'error', message, {
       error:
         error instanceof Error
@@ -120,7 +121,7 @@ export class LoggerService implements OnModuleInit {
   /**
    * Log warning messages
    */
-  async warn(category: string, message: string, data?: any) {
+  async warn(category: string, message: string, data?: unknown) {
     const logger = this.getLogger(category);
     logger.warn(message);
     await this.writeToFile(category, 'warn', message, data);

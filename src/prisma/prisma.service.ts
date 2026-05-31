@@ -1,9 +1,7 @@
-/* eslint-disable prettier/prettier */
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../generated/client';
 import { ConfigService } from '@nestjs/config';
-import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 @Injectable()
 export class PrismaService
@@ -11,13 +9,14 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor(private readonly config: ConfigService) {
-    const rawUrl = config.get<string>('DATABASE_URL')!;
-    const connectionString = rawUrl.replace(/&?channel_binding=require/g, '');
-    const pool = new Pool({ connectionString, ssl: connectionString.includes('sslmode=require') ? { rejectUnauthorized: false } : undefined });
-    const adapter = new PrismaPg(pool);
+    const connectionString = config.get<string>('DATABASE_URL')!;
+    const adapter = new PrismaPg({
+      connectionString,
+      ssl: { rejectUnauthorized: false },
+    });
     super({
       adapter,
-      log: ['query', 'error', 'warn'],
+      log: config.get('LOG_LEVELS') || ['query', 'error', 'warn'],
     });
   }
 

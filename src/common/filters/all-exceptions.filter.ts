@@ -6,8 +6,8 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
+import type { Request, Response } from 'express';
+import { Prisma } from '../../generated/client';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -21,7 +21,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error';
 
-    let errors: any = undefined;
+    let errors: unknown = undefined;
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
@@ -40,11 +40,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         'errors' in errorResponse
       ) {
         errors = errorResponse['errors'];
-        this.logger.error(
-          `Validation errors: ${JSON.stringify(errors)}`,
-        );
+        this.logger.error(`Validation errors: ${JSON.stringify(errors)}`);
       }
-    } else if (exception instanceof PrismaClientKnownRequestError) {
+    } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       // Handle Prisma specific errors
       switch (exception.code) {
         case 'P2002':

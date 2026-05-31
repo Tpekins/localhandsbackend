@@ -16,11 +16,11 @@ export class SearchController {
     @Param('id', ParseIntPipe) id: number,
     @Query('include') include?: string,
   ) {
-    let includeObj;
+    let includeObj: Record<string, unknown> | undefined;
     if (include) {
       try {
-        includeObj = JSON.parse(include);
-      } catch (e) {
+        includeObj = JSON.parse(include) as Record<string, unknown>;
+      } catch {
         includeObj = undefined;
       }
     }

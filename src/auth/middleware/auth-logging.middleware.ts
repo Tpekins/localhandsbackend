@@ -1,6 +1,16 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { LoggerService } from '../../common/services/logger.service';
+
+interface AuthResponseBody {
+  userId?: string;
+  message?: string;
+}
+
+interface AuthRequestBody {
+  username?: string;
+  email?: string;
+}
 
 /**
  * Middleware to log authentication-related events
@@ -12,16 +22,19 @@ export class AuthLoggingMiddleware implements NestMiddleware {
   /**
    * Process and log authentication requests
    */
-  async use(req: Request, res: Response, next: NextFunction) {
+  use(req: Request, res: Response, next: NextFunction): void {
     const startTime = Date.now();
-    const { method, originalUrl, body } = req;
+    const { method, originalUrl } = req;
     const userAgent = req.get('user-agent') || '';
 
     // Create a response interceptor
-    const originalSend = res.send;
-    res.send = function (body: any) {
+    const originalSend = res.send.bind(res) as unknown as (
+      body?: unknown,
+    ) => Response;
+    res.send = (body?: unknown): Response => {
       const responseTime = Date.now() - startTime;
       const statusCode = res.statusCode;
+      const responseBody = body as AuthResponseBody | undefined;
 
       // Log authentication attempt
       if (originalUrl.includes('/auth/')) {
@@ -30,34 +43,33 @@ export class AuthLoggingMiddleware implements NestMiddleware {
           ? 'Authentication Success'
           : 'Authentication Failed';
 
-        this.logger.logAuth(event, {
-          userId: body?.userId, // Will be present on successful auth
-          success: isSuccess,
+        void this.logger.logAuth(responseBody?.userId, event, isSuccess, {
           method,
           url: originalUrl,
           userAgent,
           responseTime,
           statusCode,
-          failureReason: !isSuccess ? body?.message : undefined,
+          failureReason: !isSuccess ? responseBody?.message : undefined,
         });
 
         // Additional security logging for failed attempts
         if (!isSuccess) {
-          this.logger.logSecurity('Failed Authentication Attempt', {
+          const requestBody = req.body as AuthRequestBody;
+          void this.logger.logSecurity('Failed Authentication Attempt', {
             ip: req.ip,
             userAgent,
             method,
             url: originalUrl,
             attemptedCredentials: {
-              username: req.body?.username || req.body?.email,
+              username: requestBody?.username || requestBody?.email,
               // Never log passwords
             },
           });
         }
       }
 
-      return originalSend.call(res, body);
-    }.bind(this);
+      return originalSend(body);
+    };
 
     next();
   }

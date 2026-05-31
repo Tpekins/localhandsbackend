@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '../generated/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
@@ -41,7 +42,7 @@ export class BookingService {
   }
 
   async findAll(filters?: { clientId?: string }) {
-    const where: any = {};
+    const where: Prisma.BookingWhereInput = {};
     if (filters?.clientId) {
       where.clientId = Number(filters.clientId);
     }

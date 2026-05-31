@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { Prisma } from '../generated/browser';
 
 @Injectable()
 export class NotificationsService {
@@ -22,7 +23,7 @@ export class NotificationsService {
   }
 
   async findAll(filters?: { userId?: string; read?: string }) {
-    const where: any = {};
+    const where: Prisma.NotificationWhereInput = {};
     if (filters?.userId) where.userId = Number(filters.userId);
     if (filters?.read !== undefined) where.read = filters.read === 'true';
 
@@ -45,7 +46,9 @@ export class NotificationsService {
   }
 
   async update(id: number, updateNotificationDto: UpdateNotificationDto) {
-    const notification = await this.prisma.notification.findUnique({ where: { id } });
+    const notification = await this.prisma.notification.findUnique({
+      where: { id },
+    });
     if (!notification) {
       throw new NotFoundException(`Notification with ID ${id} not found`);
     }
@@ -57,7 +60,9 @@ export class NotificationsService {
   }
 
   async remove(id: number) {
-    const notification = await this.prisma.notification.findUnique({ where: { id } });
+    const notification = await this.prisma.notification.findUnique({
+      where: { id },
+    });
     if (!notification) {
       throw new NotFoundException(`Notification with ID ${id} not found`);
     }

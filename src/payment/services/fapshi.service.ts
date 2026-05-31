@@ -285,7 +285,7 @@ export class FapshiService {
   private generateSignature(payload: Record<string, unknown>): string {
     const sortedKeys = Object.keys(payload).sort();
     const queryString = sortedKeys
-      // eslint-disable-next-line @typescript-eslint/no-base-to-string
+
       .map(key => `${key}=${String(payload[key])}`)
       .join('&');
 

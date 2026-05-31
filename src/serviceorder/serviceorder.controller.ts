@@ -39,7 +39,10 @@ export class ServiceorderController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Retrieve all service orders, optionally filtered by status or client' })
+  @ApiOperation({
+    summary:
+      'Retrieve all service orders, optionally filtered by status or client',
+  })
   @ApiResponse({ status: 200, description: 'List of all service orders.' })
   findAll(
     @Query('status') status?: string,

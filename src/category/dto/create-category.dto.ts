@@ -4,7 +4,7 @@ import { PartialType } from '@nestjs/mapped-types';
 export class CreateCategoryDto {
   @IsString({ message: 'Name must be a string and is required.' })
   @Length(3, 50, { message: 'Name must be between 3 and 50 characters.' })
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsString({ message: 'Description must be a string if provided.' })

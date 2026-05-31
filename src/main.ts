@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as compression from 'compression';
+import compression from 'compression';
 import { ValidationPipe, RequestMethod, BadRequestException, Logger } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable, Logger } from '@nestjs/common';
 import {
   GeneratePaymentLinkDto,
@@ -10,8 +8,8 @@ import {
 } from './dto/fapshi-payment.dto';
 import { FapshiService } from './services/fapshi.service';
 import type { FapshiWebhookPayload } from './services/fapshi.service';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { PaymentStatus } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { PaymentStatus } from '../generated/client';
 
 @Injectable()
 export class PaymentService {
@@ -74,7 +72,7 @@ export class PaymentService {
     } catch (err) {
       throw err;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
     const paymentLink = fapshiResponse.link;
     if (!paymentLink) {
       throw new Error('Failed to retrieve payment link from Fapshi.');
@@ -85,7 +83,7 @@ export class PaymentService {
         contractId: contract.id,
         amount: contract.escrowAmount,
         status: 'PENDING',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
         transactionId: fapshiResponse.transId,
         paymentMethod: 'MTN_MOBILE_MONEY', // Or 'FAPSHI' if you have an enum value
       },

@@ -40,7 +40,9 @@ export class BookingController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Retrieve all bookings, optionally filtered by client' })
+  @ApiOperation({
+    summary: 'Retrieve all bookings, optionally filtered by client',
+  })
   @ApiResponse({ status: 200, description: 'List of all bookings.' })
   findAll(@Query('clientId') clientId?: string) {
     return this.bookingService.findAll({ clientId });

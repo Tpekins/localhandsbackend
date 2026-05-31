@@ -1,13 +1,15 @@
 import { IsInt, IsPositive, IsOptional } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
-import { ContractStatus } from '@prisma/client';
+import { ContractStatus } from '../../generated/client';
 
 export class CreateContractDto {
   @IsInt({ message: 'Service Order ID must be an integer and is required.' })
-  serviceOrderId: number;
+  serviceOrderId!: number;
 
-  @IsPositive({ message: 'Escrow amount must be a positive number and is required.' })
-  escrowAmount: number;
+  @IsPositive({
+    message: 'Escrow amount must be a positive number and is required.',
+  })
+  escrowAmount!: number;
 
   @IsOptional()
   @IsInt({ message: 'Status must be an integer if provided.' })

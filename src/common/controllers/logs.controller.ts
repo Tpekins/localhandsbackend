@@ -9,7 +9,7 @@ interface LogRequestDto {
   category: string;
   message: string;
   timestamp: string;
-  data?: any;
+  data?: unknown;
 }
 
 @ApiTags('Logs')

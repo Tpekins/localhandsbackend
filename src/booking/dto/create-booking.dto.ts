@@ -3,16 +3,16 @@ import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateBookingDto {
   @IsInt({ message: 'Service ID must be an integer and is required.' })
-  serviceId: number;
+  serviceId!: number;
 
   @IsInt({ message: 'Client ID must be an integer and is required.' })
-  clientId: number;
+  clientId!: number;
 
   @IsDate({ message: 'Start time must be a valid date and is required.' })
-  startTime: Date;
+  startTime!: Date;
 
   @IsDate({ message: 'End time must be a valid date and is required.' })
-  endTime: Date;
+  endTime!: Date;
 
   @IsOptional()
   @IsString({ message: 'Location must be a string if provided.' })
