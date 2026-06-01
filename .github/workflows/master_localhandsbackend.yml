@@ -1,4 +1,4 @@
-name: Build and deploy Node.js app to Azure Web App - localhandsbackend
+name: Build and deploy Node.js app to Azure Web App - Localhandsbackend
 
 on:
   push:
@@ -32,7 +32,6 @@ jobs:
           yarn build
 
       - name: Zip artifact for deployment
- 
         run: zip -r release.zip dist src package.json yarn.lock prisma web.config nest-cli.json tsconfig.json tsconfig.build.json
 
       - name: Upload artifact for deployment job
@@ -57,14 +56,14 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_19C3E9B89C7C401EA58A0ED16C6E34DB }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DEDC00F9A06849DAA8F1DD25C70E3ACB }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_41DE85B55FDA43BF892B179E50D586EE }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8AB4A8AA64DE49D0A464018F6F7C5770 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6C2DC4CDB85F4411AAEA0C950C9950D0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F39F2032323244F2B16CE0BF69474F0A }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'localhandsbackend'
+          app-name: 'Localhandsbackend'
           slot-name: 'Production'
           package: release.zip
