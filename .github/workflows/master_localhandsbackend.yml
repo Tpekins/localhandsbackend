@@ -1,4 +1,7 @@
-name: Build and deploy Node.js app to Azure Web App - localhandsbackend
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy Node.js app to Azure Web App - Localhandsbackend
 
 on:
   push:
@@ -10,60 +13,47 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+      contents: read #This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: '22.x'
-
-      - name: Install dependencies, generate prisma, and build
-        run: |
-          yarn install --frozen-lockfile
-          yarn add @prisma/adapter-neon
-          npx prisma generate
-          yarn build
-
-      - name: Zip artifact for deployment
-        run: zip -r release.zip dist package.json yarn.lock prisma web.config  
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: release.zip
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write
-      contents: read
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: node-app
-
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_19C3E9B89C7C401EA58A0ED16C6E34DB }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DEDC00F9A06849DAA8F1DD25C70E3ACB }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_41DE85B55FDA43BF892B179E50D586EE }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8AB4A8AA64DE49D0A464018F6F7C5770 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6C2DC4CDB85F4411AAEA0C950C9950D0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F39F2032323244F2B16CE0BF69474F0A }}
 
       - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
         with:
-          app-name: 'localhandsbackend'
+          app-name: 'Localhandsbackend'
           slot-name: 'Production'
-          package: release.zip
+          package: .
+          
