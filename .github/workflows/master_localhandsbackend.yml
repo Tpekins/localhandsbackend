@@ -32,7 +32,8 @@ jobs:
           yarn build
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip dist package.json yarn.lock prisma web.config  
+ 
+        run: zip -r release.zip dist src package.json yarn.lock prisma web.config nest-cli.json tsconfig.json tsconfig.build.json
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
