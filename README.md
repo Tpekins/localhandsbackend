@@ -491,4 +491,8 @@ A comprehensive audit documented in `BACKEND_AUDIT.md` identified the following 
 
 ---
 
+**Maintained by Tiani Perkins Ibica** 🇨🇲
+
+*Cameroon — CM Tiani Perkins Ibica CM*
+
 *This README is maintained alongside the codebase. For frontend documentation, see `../localhandsfrontend/README.md`.*
