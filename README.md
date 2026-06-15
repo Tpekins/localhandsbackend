@@ -95,9 +95,9 @@ flowchart TB
 cd localhandsbackend
 
 # Install dependencies
-npm install
-# or
 yarn install
+# or
+npm install
 
 # Create environment file
 cp .env.example .env
@@ -109,9 +109,9 @@ npx prisma generate
 npx prisma migrate dev
 
 # Start development server
-npm run start:dev
-# or
 yarn start:dev
+# or
+npm run start:dev
 ```
 
 The development server runs on `http://localhost:3000` by default.
@@ -686,15 +686,23 @@ For the full Prisma schema, see `prisma/schema.prisma`.
 
 ```bash
 # Development
+yarn start:dev
+# or
 npm run start:dev
 
 # Production build
+yarn build
+# or
 npm run build
 
 # Run compiled code
+yarn start
+# or
 npm run start
 
 # Production mode
+yarn start:prod
+# or
 npm run start:prod
 ```
 
