@@ -2,9 +2,7 @@
 
 > NestJS-based API server for the LocalHands marketplace platform.
 
-**Maintained by Tiani Perkins Ibica** 🇨🇲  
-*Cameroon — CM Tiani Perkins Ibica CM*
-
+**Maintained by Tiani Pekins Ebika** 🇨🇲  
 ---
 
 ## Table of Contents
@@ -798,8 +796,5 @@ A comprehensive audit documented in `BACKEND_AUDIT.md` identified the following 
 10. **Business Logic**: Add booking conflict checks, status transition guards, and review validation.
 
 ---
-
-**Maintained by Tiani Perkins Ibica** 🇨🇲  
-*Cameroon — CM Tiani Perkins Ibica CM*
 
 *This README is maintained alongside the codebase. For frontend documentation, see `../localhandsfrontend/README.md`.*
