@@ -151,39 +151,64 @@ flowchart LR
 ### 4.2 Module System
 
 ```mermaid
-flowchart TB
-    AppModule["AppModule (Root)"]
-    
-    AppModule --> ConfigModule["⚙️ ConfigModule"]
-    AppModule --> PrismaModule["🗄️ PrismaModule"]
-    AppModule --> CommonModule["📦 CommonModule"]
-    AppModule --> HealthModule["❤️ HealthModule"]
-    
-    AppModule --> AuthModule["🔐 AuthModule"]
-    AppModule --> UserModule["👤 UserModule"]
-    AppModule --> ProviderModule["👨‍🔧 ProviderModule"]
-    AppModule --> ServiceModule["🛠️ ServiceModule"]
-    AppModule --> ServicepackageModule["📦 ServicepackageModule"]
-    AppModule --> ServiceassetModule["🖼️ ServiceassetModule"]
-    AppModule --> ServiceorderModule["📋 ServiceorderModule"]
-    AppModule --> CategoryModule["🏷️ CategoryModule"]
-    AppModule --> BookingModule["📅 BookingModule"]
-    AppModule --> AvailabilityModule["⏰ AvailabilityModule"]
-    AppModule --> ContractModule["📄 ContractModule"]
-    AppModule --> ProposalModule["💼 ProposalModule"]
-    AppModule --> ReviewModule["⭐ ReviewModule"]
-    AppModule --> PaymentModule["💳 PaymentModule"]
-    AppModule --> MessagesModule["💬 MessagesModule"]
-    AppModule --> NotificationsModule["🔔 NotificationsModule"]
-    AppModule --> ProfileModule["📝 ProfileModule"]
-    AppModule --> ClientModule["🧑‍💼 ClientModule"]
-    AppModule --> SettingsModule["⚡ SettingsModule"]
+flowchart TD
+    AppModule["🏠 AppModule (Root)"]
 
-    style AppModule fill:#fff9c4
-    style ConfigModule fill:#e1f5fe
-    style PrismaModule fill:#e1f5fe
-    style CommonModule fill:#e1f5fe
-    style HealthModule fill:#e1f5fe
+    subgraph Infrastructure["⚙️ Infrastructure Layer"]
+        ConfigModule["ConfigModule"]
+        PrismaModule["PrismaModule"]
+        CommonModule["CommonModule"]
+        HealthModule["HealthModule"]
+    end
+
+    subgraph UserAuth["👤 User & Auth Layer"]
+        AuthModule["AuthModule"]
+        UserModule["UserModule"]
+        ProfileModule["ProfileModule"]
+        ClientModule["ClientModule"]
+        ProviderModule["ProviderModule"]
+    end
+
+    subgraph CoreService["🛠️ Core Service Layer"]
+        ServiceModule["ServiceModule"]
+        CategoryModule["CategoryModule"]
+        ServicepackageModule["ServicepackageModule"]
+        ServiceassetModule["ServiceassetModule"]
+        ServiceorderModule["ServiceorderModule"]
+        AvailabilityModule["AvailabilityModule"]
+    end
+
+    subgraph Business["📋 Business Logic Layer"]
+        BookingModule["BookingModule"]
+        ProposalModule["ProposalModule"]
+        ContractModule["ContractModule"]
+        ReviewModule["ReviewModule"]
+        PaymentModule["PaymentModule"]
+    end
+
+    subgraph Communication["💬 Communication Layer"]
+        MessagesModule["MessagesModule"]
+        NotificationsModule["NotificationsModule"]
+    end
+
+    subgraph Admin["⚡ Admin Layer"]
+        SettingsModule["SettingsModule"]
+    end
+
+    AppModule --> Infrastructure
+    AppModule --> UserAuth
+    AppModule --> CoreService
+    AppModule --> Business
+    AppModule --> Communication
+    AppModule --> Admin
+
+    style AppModule fill:#fff9c4,stroke:#333,stroke-width:2px
+    style Infrastructure fill:#e1f5fe,stroke:#333,stroke-width:1px
+    style UserAuth fill:#e8f5e9,stroke:#333,stroke-width:1px
+    style CoreService fill:#fff3e0,stroke:#333,stroke-width:1px
+    style Business fill:#fce4ec,stroke:#333,stroke-width:1px
+    style Communication fill:#f3e5f5,stroke:#333,stroke-width:1px
+    style Admin fill:#fff9c4,stroke:#333,stroke-width:1px
 ```
 
 ### 4.3 Request Lifecycle
