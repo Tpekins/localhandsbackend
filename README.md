@@ -2,9 +2,14 @@
 
 > NestJS-based API server for the LocalHands marketplace platform.
 
+**Maintained by Tiani Perkins Ibica** 🇨🇲  
+*Cameroon — CM Tiani Perkins Ibica CM*
+
+---
+
 ## Table of Contents
 
-1. [Project Overview](#1-project-overview)
+1. [System Architecture Diagram](#1-system-architecture-diagram)
 2. [Technology Stack](#2-technology-stack)
 3. [Getting Started](#3-getting-started)
 4. [Architecture](#4-architecture)
@@ -14,14 +19,13 @@
    - 4.4 [Database Layer](#44-database-layer)
    - 4.5 [Authentication & Authorization](#45-authentication--authorization)
    - 4.6 [API Controllers](#46-api-controllers)
-   - 4.7 [Services](#47-services)
-   - 4.8 [Middleware](#48-middleware)
-   - 4.9 [Logging & Observability](#49-logging--observability)
-   - 4.10 [Payment Integration](#410-payment-integration)
-   - 4.11 [Configuration Management](#411-configuration-management)
-   - 4.12 [Exception Handling](#412-exception-handling)
-   - 4.13 [Swagger API Documentation](#413-swagger-api-documentation)
-   - 4.14 [Health Checks](#414-health-checks)
+   - 4.7 [Middleware Pipeline](#47-middleware-pipeline)
+   - 4.8 [Logging & Observability](#48-logging--observability)
+   - 4.9 [Payment Integration](#49-payment-integration)
+   - 4.10 [Configuration Management](#410-configuration-management)
+   - 4.11 [Exception Handling](#411-exception-handling)
+   - 4.12 [Swagger API Documentation](#412-swagger-api-documentation)
+   - 4.13 [Health Checks](#413-health-checks)
 5. [Database Schema](#5-database-schema)
 6. [Build & Deployment](#6-build--deployment)
 7. [Environment Variables](#7-environment-variables)
@@ -30,20 +34,39 @@
 
 ---
 
-## 1. Project Overview
+## 1. System Architecture Diagram
 
-The LocalHands backend is a RESTful API built with NestJS. It serves the React frontend and manages all business logic, data persistence, authentication, and third-party integrations. The backend follows a modular architecture with feature-based modules.
+```mermaid
+flowchart TB
+    subgraph Client["🖥️ Client Layer"]
+        A["React Frontend"]
+    end
 
-**Core capabilities:**
-- User registration and authentication with JWT and role-based access control
-- Service listing, discovery, and management
-- Booking and appointment scheduling
-- Service ordering and proposal submission
-- Contract management with escrow payment support
-- In-platform messaging
-- Review and rating system
-- Payment processing via Fapshi integration
-- Administrative operations for platform management
+    subgraph Server["⚙️ Server Layer"]
+        B["NestJS Backend"]
+        C["Prisma ORM"]
+    end
+
+    subgraph Database["🗄️ Database Layer"]
+        D["PostgreSQL"]
+    end
+
+    subgraph External["🌐 External Services"]
+        E["Fapshi Payment Gateway"]
+        F["Google OAuth"]
+    end
+
+    A -->|"HTTPS / REST API"| B
+    B -->|"SQL Queries"| C
+    C -->|"Connection Pool"| D
+    B -->|"HTTP API"| E
+    A -->|"OAuth 2.0"| F
+
+    style Client fill:#e1f5fe
+    style Server fill:#e8f5e9
+    style Database fill:#fff3e0
+    style External fill:#fce4ec
+```
 
 ---
 
@@ -101,19 +124,20 @@ The development server runs on `http://localhost:3000` by default.
 
 ### 4.1 Application Bootstrap
 
-The backend is bootstrapped in `src/main.ts` following this strict sequence:
+```mermaid
+flowchart LR
+    A["NestFactory.create(AppModule)"] --> B["Retrieve ConfigService"]
+    B --> C["Configure CORS"]
+    C --> D["Register Global ValidationPipe"]
+    D --> E["Register Global ExceptionFilter"]
+    E --> F["Register Global LoggingInterceptor"]
+    F --> G["Enable Compression"]
+    G --> H["Set Global API Prefix<br/>/api"]
+    H --> I["Setup Swagger Docs"]
+    I --> J["Start HTTP Listener"]
 
-```
-NestFactory.create(AppModule)
-  ├── Retrieve ConfigService
-  ├── Configure CORS (whitelist-based)
-  ├── Register Global ValidationPipe
-  ├── Register Global ExceptionFilter
-  ├── Register Global LoggingInterceptor
-  ├── Enable Compression
-  ├── Set Global API Prefix (/api)
-  ├── Setup Swagger Documentation
-  └── Start HTTP Listener (PORT env var)
+    style A fill:#c8e6c9
+    style J fill:#c8e6c9
 ```
 
 **Bootstrap Details:**
@@ -126,59 +150,77 @@ NestFactory.create(AppModule)
 
 ### 4.2 Module System
 
-The backend is organized using NestJS modules. Each module encapsulates a domain feature.
+```mermaid
+flowchart TB
+    AppModule["AppModule (Root)"]
+    
+    AppModule --> ConfigModule["⚙️ ConfigModule"]
+    AppModule --> PrismaModule["🗄️ PrismaModule"]
+    AppModule --> CommonModule["📦 CommonModule"]
+    AppModule --> HealthModule["❤️ HealthModule"]
+    
+    AppModule --> AuthModule["🔐 AuthModule"]
+    AppModule --> UserModule["👤 UserModule"]
+    AppModule --> ProviderModule["👨‍🔧 ProviderModule"]
+    AppModule --> ServiceModule["🛠️ ServiceModule"]
+    AppModule --> ServicepackageModule["📦 ServicepackageModule"]
+    AppModule --> ServiceassetModule["🖼️ ServiceassetModule"]
+    AppModule --> ServiceorderModule["📋 ServiceorderModule"]
+    AppModule --> CategoryModule["🏷️ CategoryModule"]
+    AppModule --> BookingModule["📅 BookingModule"]
+    AppModule --> AvailabilityModule["⏰ AvailabilityModule"]
+    AppModule --> ContractModule["📄 ContractModule"]
+    AppModule --> ProposalModule["💼 ProposalModule"]
+    AppModule --> ReviewModule["⭐ ReviewModule"]
+    AppModule --> PaymentModule["💳 PaymentModule"]
+    AppModule --> MessagesModule["💬 MessagesModule"]
+    AppModule --> NotificationsModule["🔔 NotificationsModule"]
+    AppModule --> ProfileModule["📝 ProfileModule"]
+    AppModule --> ClientModule["🧑‍💼 ClientModule"]
+    AppModule --> SettingsModule["⚡ SettingsModule"]
 
-**Root Module Imports (`AppModule`):**
-
-```
-AppModule
-├── ConfigModule (global, loads PaymentConfig + ServerConfig)
-├── PrismaModule (global)
-├── CommonModule
-├── HealthModule
-├── AuthModule
-├── UserModule
-├── ProviderModule
-├── ServiceModule
-├── ServicepackageModule
-├── ServiceassetModule
-├── ServiceorderModule
-├── CategoryModule
-├── BookingModule
-├── AvailabilityModule
-├── ContractModule
-├── ProposalModule
-├── ReviewModule
-├── PaymentModule
-├── MessagesModule
-├── NotificationsModule
-├── ProfileModule
-├── ClientModule
-└── SettingsModule
+    style AppModule fill:#fff9c4
+    style ConfigModule fill:#e1f5fe
+    style PrismaModule fill:#e1f5fe
+    style CommonModule fill:#e1f5fe
+    style HealthModule fill:#e1f5fe
 ```
 
 ### 4.3 Request Lifecycle
 
-```
-Client Request
-  └── HTTP Server
-       ├── CORS Middleware
-       ├── Compression Middleware
-       ├── Global ValidationPipe
-       ├── Route Guards (JwtAuthGuard)
-       ├── Controller Method
-       ├── Service Method
-       ├── Prisma ORM
-       └── PostgreSQL
-            └── Response back through the same chain
+```mermaid
+flowchart TB
+    A["📤 Client Request"] --> B["HTTP Server"]
+    B --> C["🌍 CORS Middleware"]
+    C --> D["📦 Compression Middleware"]
+    D --> E["✅ Global ValidationPipe"]
+    E --> F["🔒 Route Guards<br/>JwtAuthGuard"]
+    F --> G["🎮 Controller Method"]
+    G --> H["⚙️ Service Method"]
+    H --> I["📊 Prisma ORM"]
+    I --> J["🗄️ PostgreSQL"]
+    J --> I
+    I --> H
+    H --> G
+    G --> K["📝 LoggingInterceptor"]
+    K --> L["❌ ExceptionFilter"]
+    L --> M["📥 HTTP Response"]
+
+    style A fill:#ffccbc
+    style M fill:#c8e6c9
 ```
 
 ### 4.4 Database Layer
 
-The database layer is managed through Prisma ORM. The `PrismaModule` is declared as `@Global()`, making `PrismaService` available throughout the application.
+```mermaid
+flowchart LR
+    A["⚙️ Service Layer"] --> B["📊 PrismaService"]
+    B --> C["🔌 @prisma/adapter-pg"]
+    C --> D["🗄️ PostgreSQL Pool"]
+    D --> E["🗄️ PostgreSQL Database"]
 
-```
-Service Layer → PrismaService → @prisma/adapter-pg → PostgreSQL Pool → PostgreSQL
+    style B fill:#fff9c4
+    style E fill:#fff3e0
 ```
 
 The `PrismaService` extends `PrismaClient` and implements `OnModuleInit` / `OnModuleDestroy` lifecycle hooks. It connects on startup and disconnects on shutdown. The connection uses the `@prisma/adapter-pg` driver with SSL (`rejectUnauthorized: false`) for Neon PostgreSQL compatibility.
@@ -186,23 +228,33 @@ The `PrismaService` extends `PrismaClient` and implements `OnModuleInit` / `OnMo
 ### 4.5 Authentication & Authorization
 
 **Login Flow:**
-```
-POST /api/auth/login
-  └── AuthController.login()
-       └── AuthService.validateUser()
-            ├── UserService.findByEmail() / findByPhoneNumber()
-            └── bcrypt.compare(password, hash)
-                 ├── Valid → Generate JWT token → Return { access_token, user }
-                 └── Invalid → ForbiddenException
+
+```mermaid
+flowchart TD
+    A["POST /api/auth/login"] --> B["AuthController.login()"]
+    B --> C["AuthService.validateUser()"]
+    C --> D["UserService.findByEmail() /<br/>findByPhoneNumber()"]
+    D --> E["bcrypt.compare(password, hash)"]
+    E --> F{"Password Valid?"}
+    F -->|Yes| G["Generate JWT Token"]
+    G --> H["Return { access_token, user }"]
+    F -->|No| I["🚫 ForbiddenException"]
+
+    style G fill:#c8e6c9
+    style I fill:#ffccbc
 ```
 
 **Authenticated Request Flow:**
-```
-Request with Authorization: Bearer <token>
-  └── JwtAuthGuard
-       └── JwtStrategy.validate()
-            └── Attach user to Request object
-                 └── Controller accesses req.user
+
+```mermaid
+flowchart LR
+    A["📤 Request<br/>Authorization: Bearer <token>"] --> B["🔒 JwtAuthGuard"]
+    B --> C["JwtStrategy.validate()"]
+    C --> D["Attach user to<br/>Request object"]
+    D --> E["🎮 Controller<br/>accesses req.user"]
+
+    style B fill:#e1f5fe
+    style D fill:#c8e6c9
 ```
 
 **Token Structure:**
@@ -215,38 +267,49 @@ The JWT payload contains `email`, `phoneNumber`, `sub` (user ID), `name`, and `r
 
 ### 4.6 API Controllers
 
-| Controller | Route | Primary Operations |
-|-----------|-------|-------------------|
-| `AuthController` | `/api/auth` | Register, login, profile, change password |
-| `UserController` | `/api/user` | CRUD for users |
-| `ProviderController` | `/api/provider` | Provider profiles |
-| `ServiceController` | `/api/services` | Service CRUD, status, views |
-| `ServicepackageController` | `/api/servicepackage` | Service packages |
-| `ServiceassetController` | `/api/serviceasset` | Service assets |
-| `CategoryController` | `/api/category` | Categories |
-| `BookingController` | `/api/booking` | Booking CRUD |
-| `AvailabilityController` | `/api/availability` | Provider schedules |
-| `ServiceorderController` | `/api/serviceorder` | Service orders |
-| `ProposalController` | `/api/proposal` | Proposals |
-| `ContractController` | `/api/contract` | Contracts |
-| `PaymentController` | `/api/payments` | Payment links, direct pay, status |
-| `MessagesController` | `/api/messages` | Messaging |
-| `ReviewController` | `/api/review` | Reviews |
-| `ProfileController` | `/api/profile` | Profiles |
-| `NotificationsController` | `/api/notifications` | Notifications |
-| `ClientController` | `/api/client` | Client ops |
-| `SettingsController` | `/api/settings` | System settings (admin) |
-| `HealthController` | `/health` | Health check |
-| `AppController` | `/` | Redirect to Swagger docs |
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    API Endpoint Hierarchy                    │
+├─────────────────────────────────────────────────────────────┤
+│  🔐 /api/auth           → Register, Login, Profile, Password│
+│  👤 /api/user           → CRUD for Users                    │
+│  👨‍🔧 /api/provider      → Provider Profiles                 │
+│  🛠️ /api/services      → Service CRUD, Status, Views      │
+│  📦 /api/servicepackage → Service Packages                 │
+│  🖼️ /api/serviceasset   → Service Assets                    │
+│  🏷️ /api/category       → Categories                        │
+│  📅 /api/booking        → Booking CRUD                     │
+│  ⏰ /api/availability   → Provider Schedules               │
+│  📋 /api/serviceorder   → Service Orders                   │
+│  💼 /api/proposal       → Proposals                        │
+│  📄 /api/contract       → Contracts                        │
+│  💳 /api/payments       → Payment Links, Direct Pay, Status│
+│  💬 /api/messages       → Messaging                        │
+│  ⭐ /api/review         → Reviews                          │
+│  📝 /api/profile        → Profiles                         │
+│  🔔 /api/notifications  → Notifications                    │
+│  🧑‍💼 /api/client         → Client Operations               │
+│  ⚡ /api/settings       → System Settings (Admin)          │
+│  ❤️ /health             → Health Check (No Prefix)       │
+│  🏠 /                   → Redirect to /api/docs            │
+└─────────────────────────────────────────────────────────────┘
+```
 
-### 4.7 Services
+### 4.7 Middleware Pipeline
 
-Services contain the business logic. Each service is injectable and interacts with the database through `PrismaService`. They are responsible for:
-- Validating business rules
-- Transforming data between DTOs and database models
-- Throwing appropriate HTTP exceptions when constraints are violated
+```mermaid
+flowchart LR
+    A["📤 Request"] --> B["auth.middleware"]
+    B --> C["security.middleware"]
+    C --> D["rate-limit.middleware"]
+    D --> E["validation.middleware"]
+    E --> F["🎮 Controller"]
 
-### 4.8 Middleware
+    style B fill:#fff3e0
+    style C fill:#fff3e0
+    style D fill:#fff3e0
+    style E fill:#fff3e0
+```
 
 The `common/middleware` directory contains middleware stubs. Several are currently placeholders (`// TODO`) and need implementation:
 
@@ -268,9 +331,20 @@ The `common/middleware` directory contains middleware stubs. Several are current
 | `security.middleware.ts` | Security headers | **TODO — needs helmet** |
 | `validation.middleware.ts` | Request validation | Placeholder |
 
-### 4.9 Logging & Observability
+### 4.8 Logging & Observability
 
-The `LoggerService` provides structured JSON logging across multiple categories:
+```mermaid
+flowchart LR
+    A["📤 Request"] --> B["LoggingInterceptor"]
+    B --> C["LoggerService"]
+    C --> D["📁 logs/activity.log"]
+    C --> E["📁 logs/error.log"]
+    C --> F["📁 logs/payment.log"]
+    C --> G["📁 logs/security.log"]
+
+    style B fill:#fff9c4
+    style C fill:#fff9c4
+```
 
 **Log Categories:**
 - `error` — Application errors
@@ -301,12 +375,17 @@ The `LoggerService` provides structured JSON logging across multiple categories:
 
 **Sanitization:** The `LoggingInterceptor` automatically redacts `password`, `token`, and `creditCard` from request bodies and responses before logging.
 
-### 4.10 Payment Integration
+### 4.9 Payment Integration
 
-The payment system integrates with the **Fapshi** payment gateway.
+```mermaid
+flowchart LR
+    A["📤 Client"] --> B["💳 PaymentController"]
+    B --> C["⚙️ PaymentService"]
+    C --> D["🔌 FapshiService"]
+    D --> E["🌐 Fapshi API"]
+    E --> F["📱 Mobile Money Provider"]
 
-```
-Client → PaymentController → PaymentService → FapshiService → Fapshi API → Mobile Money Provider
+    style D fill:#fff9c4
 ```
 
 **Payment Endpoints:**
@@ -327,7 +406,7 @@ PAYMENT_LIVE_BASE_URL — Production endpoint (default: https://api.fapshi.com)
 PAYMENT_SANDBOX_BASE_URL — Sandbox endpoint (default: https://sandbox.fapshi.com)
 ```
 
-### 4.11 Configuration Management
+### 4.10 Configuration Management
 
 Typed configuration is loaded globally via `@nestjs/config`:
 
@@ -342,7 +421,7 @@ Typed configuration is loaded globally via `@nestjs/config`:
 - `liveBaseUrl`: Production payment endpoint
 - `sandboxBaseUrl`: Sandbox payment endpoint
 
-### 4.12 Exception Handling
+### 4.11 Exception Handling
 
 The global exception filter (`AllExceptionsFilter`) catches all unhandled exceptions and formats them consistently.
 
@@ -357,7 +436,7 @@ The global exception filter (`AllExceptionsFilter`) catches all unhandled except
 }
 ```
 
-### 4.13 Swagger API Documentation
+### 4.12 Swagger API Documentation
 
 Swagger is served at `/api/docs` and includes:
 - Bearer token authentication
@@ -365,7 +444,7 @@ Swagger is served at `/api/docs` and includes:
 - Request/response DTO schemas with validation rules
 - Operation summaries and descriptions
 
-### 4.14 Health Checks
+### 4.13 Health Checks
 
 The `/health` endpoint returns `{ status: 'ok' }`. It is excluded from the global `/api` prefix and is accessible at the root level for load balancer and monitoring checks.
 
@@ -373,25 +452,226 @@ The `/health` endpoint returns `{ status: 'ok' }`. It is excluded from the globa
 
 ## 5. Database Schema
 
-The database schema is defined in `prisma/schema.prisma` and uses PostgreSQL.
+### Entity Relationship Diagram
 
-**Key Models:**
-- `User` — Accounts with roles (CLIENT, PROVIDER, ADMIN)
-- `Profile` — Extended user profiles (bio, verification, payment details)
-- `Service` — Listed services with pricing and status
-- `ServiceOrder` — Client requests for services
-- `Contract` — Agreements between client and provider with escrow
-- `Payment` — Payment records linked to contracts
-- `Booking` — Scheduled appointments
-- `Proposal` — Provider bids on service orders
-- `Review` — Ratings and feedback on contracts
-- `Message` — Direct messaging between users
-- `Category` — Service categories
-- `Notification` — Platform notifications
-- `Provider` — Provider-specific data and availability
-- `ServicePackage` — Bundled service offerings
-- `ServiceAsset` — Images and area descriptions for services
-- `SystemSettings` — Platform-wide configuration
+```mermaid
+erDiagram
+    USER ||--o| PROFILE : has
+    USER ||--o{ SERVICE : provides
+    USER ||--o{ SERVICEORDER : places
+    USER ||--o{ BOOKING : makes
+    USER ||--o{ REVIEW : writes
+    USER ||--o{ NOTIFICATION : receives
+    USER ||--o{ PROPOSAL : submits
+    USER ||--o{ MESSAGE : sends
+    USER ||--o{ MESSAGE : receives
+    USER ||--o{ SERVICEPACKAGE : creates
+    USER ||--o| PROVIDER : is
+
+    SERVICE ||--o{ SERVICEORDER : has
+    SERVICE ||--o{ BOOKING : booked_as
+    SERVICE ||--o{ PROPOSAL : receives
+    SERVICE ||--o{ SERVICEPACKAGE : belongs_to
+    SERVICE ||--o{ SERVICEASSET : has
+    SERVICE }o--o| CATEGORY : belongs_to
+
+    SERVICEORDER ||--o| CONTRACT : generates
+    SERVICEORDER ||--o{ PROPOSAL : receives
+
+    CONTRACT ||--o{ PAYMENT : includes
+    CONTRACT ||--o{ REVIEW : receives
+    CONTRACT ||--o| PROPOSAL : accepts
+
+    PROVIDER ||--o{ SERVICE : offers
+    PROVIDER ||--o{ AVAILABILITY : has
+
+    USER {
+        int id PK
+        string name
+        enum role
+        string phoneNumber UK
+        string email UK
+        string passwordHash
+        datetime createdAt
+        datetime lastLogin
+    }
+
+    PROFILE {
+        int id PK
+        int userId FK
+        string bio
+        string mobileMoneyNumber
+        string bankAccountNumber
+        string nationalIdUrl
+        enum verificationStatus
+        string location
+        datetime createdAt
+    }
+
+    SERVICE {
+        int id PK
+        string title
+        string description
+        int categoryId FK
+        float price
+        string status
+        boolean featured
+        int providerId FK
+        int views
+        datetime createdAt
+    }
+
+    SERVICEORDER {
+        int id PK
+        int serviceId FK
+        int clientId FK
+        string description
+        float budget
+        enum status
+        datetime createdAt
+    }
+
+    CONTRACT {
+        int id PK
+        int serviceOrderId FK
+        float escrowAmount
+        enum status
+        datetime createdAt
+    }
+
+    PAYMENT {
+        int id PK
+        int contractId FK
+        float amount
+        enum paymentMethod
+        string transactionId
+        enum status
+        datetime createdAt
+    }
+
+    BOOKING {
+        int id PK
+        int serviceId FK
+        int clientId FK
+        datetime startTime
+        datetime endTime
+        string location
+        enum status
+        datetime createdAt
+    }
+
+    PROPOSAL {
+        int id PK
+        int providerId FK
+        int serviceId FK
+        string coverLetter
+        float bidAmount
+        enum status
+        int contractId FK
+        datetime createdAt
+    }
+
+    REVIEW {
+        int id PK
+        int contractId FK
+        int reviewerId FK
+        int rating
+        string comment
+        datetime createdAt
+    }
+
+    MESSAGE {
+        int id PK
+        int senderId FK
+        int receiverId FK
+        string content
+        datetime timestamp
+    }
+
+    CATEGORY {
+        int id PK
+        string name
+        string description
+    }
+
+    NOTIFICATION {
+        int id PK
+        int userId FK
+        string message
+        string type
+        boolean read
+        datetime createdAt
+    }
+
+    PROVIDER {
+        int id PK
+        int userId FK
+        datetime createdAt
+    }
+
+    AVAILABILITY {
+        int id PK
+        int providerId FK
+        int dayOfWeek
+        datetime startTime
+        datetime endTime
+    }
+
+    SERVICEPACKAGE {
+        int id PK
+        int providerId FK
+        string title
+        string description
+        float price
+        datetime createdAt
+    }
+
+    SERVICEASSET {
+        int id PK
+        int serviceId FK
+        enum type
+        string imageUrl
+        string caption
+        string areaName
+        datetime createdAt
+    }
+
+    SYSTEMSETTINGS {
+        int id PK
+        boolean maintenance_mode
+        boolean allow_registration
+        boolean review_auto_approve
+        string payment_gateway
+        boolean email_notifications
+        int max_file_size
+        string currency
+        string currency_symbol
+        string supportEmail
+        datetime createdAt
+        datetime updatedAt
+    }
+```
+
+### Key Models
+
+| Model | Description |
+|-------|-------------|
+| `User` | Accounts with roles (CLIENT, PROVIDER, ADMIN) |
+| `Profile` | Extended user profiles (bio, verification, payment details) |
+| `Service` | Listed services with pricing and status |
+| `ServiceOrder` | Client requests for services |
+| `Contract` | Agreements between client and provider with escrow |
+| `Payment` | Payment records linked to contracts |
+| `Booking` | Scheduled appointments |
+| `Proposal` | Provider bids on service orders |
+| `Review` | Ratings and feedback on contracts |
+| `Message` | Direct messaging between users |
+| `Category` | Service categories |
+| `Notification` | Platform notifications |
+| `Provider` | Provider-specific data and availability |
+| `ServicePackage` | Bundled service offerings |
+| `ServiceAsset` | Images and area descriptions for services |
+| `SystemSettings` | Platform-wide configuration |
 
 **Important Schema Notes:**
 - The `User` model has dual message relations: `sentMessages` and `receivedMessages`.
@@ -476,6 +756,26 @@ LOG_LEVELS=query,error,warn
 
 ## 9. Security Audit Summary
 
+```mermaid
+flowchart LR
+    A["🔒 Security Audit"] --> B["Secrets Exposure"]
+    A --> C["Prisma Schema"]
+    A --> D["Security Middleware"]
+    A --> E["JWT Fallback"]
+    A --> F["CORS Wildcard"]
+    A --> G["Type Safety"]
+    A --> H["Schema Redundancy"]
+    A --> I["PaymentMethod Enum"]
+    A --> J["Webhook Handling"]
+    A --> K["Business Logic"]
+
+    style A fill:#fff9c4
+    style B fill:#ffccbc
+    style D fill:#ffccbc
+    style E fill:#ffccbc
+    style F fill:#ffccbc
+```
+
 A comprehensive audit documented in `BACKEND_AUDIT.md` identified the following critical items requiring attention before production:
 
 1. **Secrets Exposure**: Ensure `.env` is never committed to version control.
@@ -491,8 +791,7 @@ A comprehensive audit documented in `BACKEND_AUDIT.md` identified the following 
 
 ---
 
-**Maintained by Tiani Perkins Ibica** 🇨🇲
-
+**Maintained by Tiani Perkins Ibica** 🇨🇲  
 *Cameroon — CM Tiani Perkins Ibica CM*
 
 *This README is maintained alongside the codebase. For frontend documentation, see `../localhandsfrontend/README.md`.*
