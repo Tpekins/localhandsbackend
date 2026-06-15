@@ -1,4 +1,4 @@
-# Local Hands — Backend
+# LocalHands Backend
 
 > NestJS-based API server for the LocalHands marketplace platform.
 
@@ -491,8 +491,6 @@ A comprehensive audit documented in `BACKEND_AUDIT.md` identified the following 
 
 ---
 
-**Maintained by Tiani Perkins Ibica** 🇨🇲
-
-*Cameroon — CM Tiani Perkins Ibica CM*
+**Maintained by Tiani Pekins Ebika** 🇨🇲
 
 *This README is maintained alongside the codebase. For frontend documentation, see `../localhandsfrontend/README.md`.*
