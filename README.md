@@ -1,4 +1,4 @@
-# Local Hands — Backend
+# LocalHands Backend
 
 > NestJS-based API server for the LocalHands marketplace platform.
 
