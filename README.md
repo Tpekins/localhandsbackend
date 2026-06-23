@@ -149,33 +149,67 @@ flowchart LR
 ### 4.2 Module System
 
 ```mermaid
-flowchart TB
+flowchart LR
     AppModule["AppModule (Root)"]
-    
-    AppModule --> ConfigModule["⚙️ ConfigModule"]
-    AppModule --> PrismaModule["🗄️ PrismaModule"]
-    AppModule --> CommonModule["📦 CommonModule"]
-    AppModule --> HealthModule["❤️ HealthModule"]
-    
-    AppModule --> AuthModule["🔐 AuthModule"]
-    AppModule --> UserModule["👤 UserModule"]
-    AppModule --> ProviderModule["👨‍🔧 ProviderModule"]
-    AppModule --> ServiceModule["🛠️ ServiceModule"]
-    AppModule --> ServicepackageModule["📦 ServicepackageModule"]
-    AppModule --> ServiceassetModule["🖼️ ServiceassetModule"]
-    AppModule --> ServiceorderModule["📋 ServiceorderModule"]
-    AppModule --> CategoryModule["🏷️ CategoryModule"]
-    AppModule --> BookingModule["📅 BookingModule"]
-    AppModule --> AvailabilityModule["⏰ AvailabilityModule"]
-    AppModule --> ContractModule["📄 ContractModule"]
-    AppModule --> ProposalModule["💼 ProposalModule"]
-    AppModule --> ReviewModule["⭐ ReviewModule"]
-    AppModule --> PaymentModule["💳 PaymentModule"]
-    AppModule --> MessagesModule["💬 MessagesModule"]
-    AppModule --> NotificationsModule["🔔 NotificationsModule"]
-    AppModule --> ProfileModule["📝 ProfileModule"]
-    AppModule --> ClientModule["🧑‍💼 ClientModule"]
-    AppModule --> SettingsModule["⚡ SettingsModule"]
+
+    subgraph Infra["Infrastructure"]
+        direction TB
+        ConfigModule["⚙️ ConfigModule"]
+        PrismaModule["🗄️ PrismaModule"]
+        CommonModule["📦 CommonModule"]
+        HealthModule["❤️ HealthModule"]
+    end
+
+    subgraph Identity["Identity"]
+        direction TB
+        AuthModule["🔐 AuthModule"]
+        UserModule["👤 UserModule"]
+        ProviderModule["👨‍🔧 ProviderModule"]
+        ClientModule["🧑‍💼 ClientModule"]
+        ProfileModule["📝 ProfileModule"]
+    end
+
+    subgraph Marketplace["Marketplace"]
+        direction TB
+        ServiceModule["🛠️ ServiceModule"]
+        ServicepackageModule["📦 ServicepackageModule"]
+        ServiceassetModule["🖼️ ServiceassetModule"]
+        ServiceorderModule["📋 ServiceorderModule"]
+        CategoryModule["🏷️ CategoryModule"]
+    end
+
+    subgraph Engagement["Engagement"]
+        direction TB
+        BookingModule["📅 BookingModule"]
+        AvailabilityModule["⏰ AvailabilityModule"]
+        ProposalModule["💼 ProposalModule"]
+        ReviewModule["⭐ ReviewModule"]
+    end
+
+    subgraph Money["Money"]
+        direction TB
+        ContractModule["📄 ContractModule"]
+        PaymentModule["💳 PaymentModule"]
+    end
+
+    subgraph Comms["Comms"]
+        direction TB
+        MessagesModule["💬 MessagesModule"]
+        NotificationsModule["🔔 NotificationsModule"]
+    end
+
+    subgraph Platform["Platform"]
+        direction TB
+        SettingsModule["⚡ SettingsModule"]
+    end
+
+    AppModule --> Infra
+    AppModule --> Identity
+    AppModule --> Marketplace
+    AppModule --> Engagement
+    AppModule --> Money
+    AppModule --> Comms
+    AppModule --> Platform
 
     style AppModule fill:#fff9c4
     style ConfigModule fill:#e1f5fe
